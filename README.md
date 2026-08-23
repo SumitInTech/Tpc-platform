@@ -133,7 +133,6 @@ tpc-platform/
 │   │   ├── validators/     # express-validator rule sets
 │   │   ├── utils/          # responseHelper, auditLogger, AppError, eligibility engine
 │   │   ├── config/         # db, etc.
-│   │   ├── scripts/        # init-replset.js (one-time local replica-set helper)
 │   │   └── seed/           # database seeder
 │   └── .env
 └── client/                 # React SPA
