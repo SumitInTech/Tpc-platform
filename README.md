@@ -142,19 +142,6 @@ tpc-platform/
 │   │   ├── config/         # db, etc.
 │   │   └── seed/           # database seeder
 │   └── .env
-=======
-│   ├── .env
-│   └── src/
-│       ├── controllers/    # auth, student, company, drive, application,
-│       │                   #   offer, placement, policy, report, notification, audit
-│       ├── routes/         # express routers (mounted under /api)
-│       ├── models/         # mongoose schemas
-│       ├── middleware/     # auth, role, validate, errorHandler, upload
-│       ├── validators/     # express-validator rule sets
-│       ├── utils/          # responseHelper, auditLogger, AppError, eligibility engine
-│       ├── config/         # db, etc.
-│       └── seed/           # database seeder
->>>>>>> af9467f (download button ,ui , readme ,)
 └── client/                 # React SPA
     └── src/
         ├── pages/tpc/      # TPC officer + admin screens
