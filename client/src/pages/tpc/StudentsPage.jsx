@@ -85,25 +85,34 @@ export default function StudentsPage() {
     setFormOpen(true);
   };
 
-  const openEdit = (s) => {
+  const buildForm = (s) => ({
+    studentId: s.studentId || '',
+    name: s.name || '',
+    email: s.email || '',
+    phone: s.phone || '',
+    branch: s.branch || 'CSE',
+    department: s.department || '',
+    batch: s.batch || '',
+    graduationYear: s.graduationYear || 2027,
+    cgpa: s.cgpa ?? '',
+    backlogs: s.backlogs ?? 0,
+    activeBacklogs: s.activeBacklogs ?? 0,
+    placementStatus: s.placementStatus || 'UNPLACED',
+    careerOutcome: s.careerOutcome || '',
+    skills: s.skills || [],
+  });
+
+  const openEdit = async (s) => {
     setEditing(s);
-    setForm({
-      studentId: s.studentId || '',
-      name: s.name || '',
-      email: s.email || '',
-      phone: s.phone || '',
-      branch: s.branch || 'CSE',
-      department: s.department || '',
-      batch: s.batch || '',
-      graduationYear: s.graduationYear || 2027,
-      cgpa: s.cgpa ?? '',
-      backlogs: s.backlogs ?? 0,
-      activeBacklogs: s.activeBacklogs ?? 0,
-      placementStatus: s.placementStatus || 'UNPLACED',
-      careerOutcome: s.careerOutcome || '',
-      skills: s.skills || [],
-    });
+    setForm(buildForm(s));
     setFormOpen(true);
+    try {
+      const res = await studentService.getStudent(s._id);
+      const fresh = res?.data || res;
+      if (fresh) setForm(buildForm(fresh));
+    } catch {
+      // keep the list-derived data if the fresh fetch fails
+    }
   };
 
   const addFormSkill = () => {

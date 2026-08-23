@@ -24,6 +24,10 @@ const STATUS_TONE = {
   SELECTED: '#10B981', REJECTED: '#EF4444', WITHDRAWN: '#94A3B8',
 };
 
+const FUNNEL_TONE = {
+  APPLIED: '#94A3B8', SHORTLISTED: '#60A5FA', INTERVIEW: '#818CF8', SELECTED: '#34D399',
+};
+
 function StatusTimeline({ app }) {
   const history = app.statusHistory || [];
   const rejected = app.status === 'REJECTED' || app.status === 'WITHDRAWN';
@@ -200,9 +204,9 @@ export default function ApplicationsPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {funnel.map((f) => (
             <div key={f.st} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ width: 96, fontSize: 12, fontWeight: 700, color: STATUS_TONE[f.st] }}>{f.st}</span>
+              <span style={{ width: 96, fontSize: 12, fontWeight: 700, color: FUNNEL_TONE[f.st] }}>{f.st}</span>
               <div style={{ flex: 1, height: 14, background: 'var(--surface-2, #eef2f7)', borderRadius: 999, overflow: 'hidden' }}>
-                <div style={{ width: `${(f.n / maxFunnel) * 100}%`, height: '100%', background: `linear-gradient(90deg, ${STATUS_TONE[f.st]}, ${STATUS_TONE[f.st]}bb)`, borderRadius: 999, transition: 'width .8s cubic-bezier(.2,.7,.3,1)' }} />
+                <div style={{ width: `${(f.n / maxFunnel) * 100}%`, height: '100%', background: FUNNEL_TONE[f.st], borderRadius: 999, transition: 'width .8s cubic-bezier(.2,.7,.3,1)' }} />
               </div>
               <span style={{ width: 34, textAlign: 'right', fontSize: 13, fontWeight: 800 }}>{f.n}</span>
             </div>
