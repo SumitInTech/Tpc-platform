@@ -77,34 +77,37 @@ function PolicyCard({ p, onToggle, toggling, onArchive }) {
   const meta = POLICY_META[p.type] || { color: '#6366F1', icon: ShieldCheck };
   const Icon = meta.icon;
   return (
-    <div style={{ ...cardStyle, position: 'relative', overflow: 'hidden', height: '100%', transition: 'transform .2s ease, box-shadow .2s ease' }}
+    <div style={{ ...cardStyle, position: 'relative', overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column', padding: 20, transition: 'transform .2s ease, box-shadow .2s ease' }}
       onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = `0 24px 48px -26px ${meta.color}`; }}
       onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = cardStyle.boxShadow; }}>
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg, ${meta.color}, #8B5CF6)` }} />
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 }}>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <span style={{ display: 'inline-flex', padding: 11, borderRadius: 13, color: '#fff', background: `linear-gradient(135deg, ${meta.color}, ${meta.color}bb)`, boxShadow: `0 12px 24px -14px ${meta.color}` }}>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center', minWidth: 0 }}>
+          <span style={{ display: 'inline-flex', padding: 11, borderRadius: 13, color: '#fff', background: `linear-gradient(135deg, ${meta.color}, ${meta.color}bb)`, boxShadow: `0 12px 24px -14px ${meta.color}`, flexShrink: 0 }}>
             <Icon size={18} />
           </span>
-          <div>
-            <div style={{ fontWeight: 800, fontSize: 15 }}>{p.name}</div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontWeight: 800, fontSize: 15, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</div>
             <div className="small muted" style={{ marginTop: 2 }}>{POLICY_TYPES.find((t) => t.value === p.type)?.label || p.type}</div>
           </div>
         </div>
-        <span className="badge" style={{ background: p.isActive ? 'var(--success-soft)' : 'var(--surface-2)', color: p.isActive ? 'var(--success-text)' : 'var(--text-sub)' }}>
+        <span className="badge" style={{ background: p.isActive ? 'var(--success-soft)' : 'var(--surface-2)', color: p.isActive ? 'var(--success-text)' : 'var(--text-sub)', flexShrink: 0 }}>
           {p.isActive ? 'Active' : 'Inactive'}
         </span>
       </div>
 
-      {p.description && <div className="small muted mt-2">{p.description}</div>}
-      <div className="mt-2"><span className="policy-config-chip">{describeConfiguration(p)}</span></div>
-      <div className="small muted mt-2" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-        <span>Scope: {labelize(p.scope)}</span>
-        <span>· v{p.version}</span>
-        <span>· {formatDate(p.effectiveFrom)}</span>
+      <div style={{ marginTop: 18, display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
+        {p.description && <div className="small muted" style={{ lineHeight: 1.5 }}>{p.description}</div>}
+        <div><span className="policy-config-chip">{describeConfiguration(p)}</span></div>
+        <div className="small muted" style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <span>Scope: {labelize(p.scope)}</span>
+          <span>· v{p.version}</span>
+          <span>· {formatDate(p.effectiveFrom)}</span>
+        </div>
       </div>
 
-      <hr className="divider" />
+      <hr className="divider" style={{ marginTop: 16, marginBottom: 14 }} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Toggle active={p.isActive} onClick={() => onToggle(p)} loading={toggling === p._id} />
         <button className="icon-btn danger" onClick={() => onArchive(p)} aria-label={`Archive ${p.name}`} title="Archive">
@@ -256,14 +259,14 @@ export default function PoliciesPage() {
         )}
       </div>
 
-      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #8B5CF6)" className="mb-3 mt-3" style={cardStyle}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #8B5CF6)" style={{ ...cardStyle, marginTop: 22, marginBottom: 22 }}>
         <SectionHeader
           icon={FlaskConical}
           title="Policy Sandbox"
           subtitle="See exactly what the engine would decide for a student right now."
           tone="#6366F1"
         />
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 14 }}>
           <select className="input" value={evalStudent} onChange={(e) => setEvalStudent(e.target.value)}
             aria-label="Select student for policy evaluation" style={{ flex: 1, minWidth: 240 }}>
             <option value="">Select a student…</option>

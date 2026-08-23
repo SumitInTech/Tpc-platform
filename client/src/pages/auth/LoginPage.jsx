@@ -16,16 +16,16 @@ const DEMO_ACCOUNTS = [
   { label: 'Priya (Not Eligible)', email: 'priya@tpcflow.local', password: 'Student@123' },
 ];
 
-// Each orbiting letter hides the initial of a top recruiter our students get hired at.
+// Orbiting letters = top recruiters our students get hired at.
 const ORBIT_COMPANIES = [
   { l: 'G', n: 'Google' },
   { l: 'A', n: 'Amazon' },
+  { l: 'S', n: 'Samsung' },
+  { l: 'U', n: 'Uber' },
   { l: 'M', n: 'Microsoft' },
   { l: 'I', n: 'Infosys' },
   { l: 'T', n: 'TCS' },
   { l: 'N', n: 'Nvidia' },
-  { l: 'W', n: 'Wipro' },
-  { l: 'F', n: 'Flipkart' },
 ];
 
 const ROLE_PERSONAS = [
