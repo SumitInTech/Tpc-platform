@@ -71,7 +71,7 @@ export default function LoginPage() {
   const getActiveRole = (em) => {
     const e = (em || '').toLowerCase();
     if (e.includes('admin')) return 2;
-    if (e.includes('officer') || e.includes('tpc')) return 1;
+    if (e.includes('officer')) return 1;
     return 0;
   };
   const activeRole = getActiveRole(email);

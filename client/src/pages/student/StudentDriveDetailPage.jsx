@@ -409,11 +409,10 @@ export default function StudentDriveDetailPage() {
       {modalOpen && (
         <ResumeApplyModal
           open
-          drive={{ ...drive, companyId: drive.companyId?._id }}
-          profile={profile}
+          drive={drive}
+          student={profile}
           onClose={() => setModalOpen(false)}
-          onSubmit={submitApply}
-          submitting={submitting}
+          onSubmitted={submitApply}
         />
       )}
     </div>

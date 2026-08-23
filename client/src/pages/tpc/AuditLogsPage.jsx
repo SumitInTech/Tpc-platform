@@ -279,15 +279,17 @@ export default function AuditLogsPage() {
       </div>
 
       <GlassPanel gradient="linear-gradient(90deg, #6366F1, #8B5CF6)" className="mb-3 mt-3" style={{ ...cardStyle, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-        <Filter size={16} color="var(--text-sub, #64748b)" />
-        <span style={{ fontWeight: 600, fontSize: 13 }}>Filter by entity</span>
+        <Filter size={16} color="var(--text-sub, #64748b)" style={{ flexShrink: 0 }} />
+        <span style={{ fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap' }}>Filter by entity</span>
         {stats.loading ? (
           <span className="small muted">Loading filters…</span>
         ) : (
-          <Segmented options={entityOptions} value={entity} onChange={setEntity} />
+          <div style={{ flex: '1 1 260px', minWidth: 0, overflowX: 'auto' }}>
+            <Segmented options={entityOptions} value={entity} onChange={setEntity} />
+          </div>
         )}
-        <div style={{ flex: 1, minWidth: 200, display: 'flex', gap: 8 }}>
-          <div className="search-box" style={{ flex: 1 }}>
+        <div style={{ flex: '1 1 300px', minWidth: 0, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <div className="search-box" style={{ flex: '1 1 200px', minWidth: 0, maxWidth: 'none' }}>
             <Search size={16} />
             <input className="input" placeholder="Search action, actor or IP…" value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)} aria-label="Search audit logs" />
@@ -296,6 +298,7 @@ export default function AuditLogsPage() {
             type="button"
             onClick={() => setCriticalOnly((v) => !v)}
             style={{
+              flexShrink: 0,
               display: 'inline-flex', alignItems: 'center', gap: 6, border: '1px solid', cursor: 'pointer',
               padding: '0 14px', borderRadius: 999, fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap',
               color: criticalOnly ? '#fff' : 'var(--danger-text)',
