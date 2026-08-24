@@ -8,7 +8,6 @@ featuring JWT authentication, an eligibility engine, audit logging, and real-tim
 ---
 
 ## Features
-
 - **Role-based access** — Admin, TPC Officer, and Student workspaces with scoped permissions.
 - **Eligibility Engine** — drives carry declarative rules; eligibility is evaluated server-side and
   re-checked at application time.
