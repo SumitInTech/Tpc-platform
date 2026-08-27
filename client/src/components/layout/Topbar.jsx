@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useNotification } from '../../context/NotificationContext';
 import NotificationDrawer from './NotificationDrawer';
+import BrandLogo from '../common/BrandLogo';
 import { initials, timeAgo } from '../../utils/formatters';
 
 const PAGE_TITLES = {
@@ -61,6 +62,10 @@ export default function Topbar({ onMenuClick }) {
       <button className="icon-btn" onClick={onMenuClick} aria-label="Open navigation menu">
         <Menu size={18} />
       </button>
+
+      <div className="topbar-logo">
+        <BrandLogo size={32} />
+      </div>
 
       <div style={{ flex: 1, minWidth: 0 }}>
         <div className="topbar-title">{title}</div>

@@ -21,8 +21,9 @@ import useCountUp from '../../hooks/useCountUp';
 import { formatLPA } from '../../utils/formatters';
 import { getChartTheme } from '../../utils/chartTheme';
 import { BRANCHES } from '../../constants';
+import { toneOf, KpiGrid } from '../../components/dashboard/primitives';
 
-const PIE_COLORS = ['#6366F1', '#8B5CF6', '#06B6D4', '#F59E0B', '#10B981', '#EF4444', '#EC4899'];
+const PIE_COLORS = ['#6366F1', '#4338CA', '#1E1B4B', '#A5B4FC', '#818CF8', '#4F46E5', '#6D74F0'];
 const FONT = "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
 
 function AnimatedNumber({ value, format = (v) => Math.round(v).toLocaleString('en-IN'), duration = 1000 }) {
@@ -30,7 +31,7 @@ function AnimatedNumber({ value, format = (v) => Math.round(v).toLocaleString('e
   return <>{format(v)}</>;
 }
 
-function Ring({ value, size = 120, stroke = 12, color = '#10B981', track = 'rgba(255,255,255,0.25)', textColor = '#fff', big = false }) {
+function Ring({ value, size = 120, stroke = 12, color = 'var(--primary)', track = 'rgba(255,255,255,0.25)', textColor = '#fff', big = false }) {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const off = c * (1 - Math.min(100, Math.max(0, value)) / 100);
@@ -79,12 +80,13 @@ function Sparkline({ data, color = '#6366F1' }) {
 }
 
 function Kpi({ label, value, format, icon: Icon, tone, spark, ring }) {
+  const resolved = toneOf(tone);
   return (
     <div style={{ position: 'relative', overflow: 'hidden', background: 'var(--surface, #fff)', border: '1px solid var(--border, #e2e8f0)', borderRadius: 16, padding: 16, boxShadow: '0 12px 30px -22px rgba(0,0,0,0.45)' }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg, ${tone}, transparent)` }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg, ${resolved}, transparent)` }} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={{ fontSize: 12, color: 'var(--text-sub, #64748b)', fontWeight: 600 }}>{label}</span>
-        <span style={{ display: 'inline-flex', padding: 7, borderRadius: 10, color: tone, background: `color-mix(in srgb, ${tone} 15%, transparent)` }}>
+        <span style={{ display: 'inline-flex', padding: 7, borderRadius: 10, color: resolved, background: `color-mix(in srgb, ${resolved} 15%, transparent)` }}>
           <Icon size={16} />
         </span>
       </div>
@@ -93,8 +95,8 @@ function Kpi({ label, value, format, icon: Icon, tone, spark, ring }) {
       </div>
       <div style={{ height: 38, display: 'flex', alignItems: 'center' }}>
         {ring != null
-          ? <Ring value={ring} size={38} stroke={5} color={tone} track="var(--border, #e2e8f0)" textColor="var(--text, #0f172a)" />
-          : <Sparkline data={spark} color={tone} />}
+          ? <Ring value={ring} size={38} stroke={5} color={resolved} track="var(--border, #e2e8f0)" textColor="var(--text, #0f172a)" />
+          : <Sparkline data={spark} color={resolved} />}
       </div>
     </div>
   );
@@ -102,7 +104,7 @@ function Kpi({ label, value, format, icon: Icon, tone, spark, ring }) {
 
 function Funnel({ stages }) {
   const max = Math.max(...stages.map((s) => s.value), 1);
-  const colors = ['#6366F1', '#8B5CF6', '#06B6D4', '#10B981'];
+  const colors = ['#A5B4FC', '#818CF8', '#6366F1', '#4338CA'];
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 10 }}>
       {stages.map((s, i) => {
@@ -214,13 +216,13 @@ export default function ReportsPage() {
   };
 
   const kpis = [
-    { key: 'total', label: 'Total Students', value: o.totalStudents || 0, format: (v) => Math.round(v).toLocaleString('en-IN'), icon: Users, tone: '#6366F1', spark: placementsSeries },
-    { key: 'placed', label: 'Placed Students', value: o.placedStudents || 0, format: (v) => Math.round(v).toLocaleString('en-IN'), icon: Award, tone: '#10B981', spark: placementsSeries },
-    { key: 'rate', label: 'Placement Rate', value: rate, format: (v) => `${v.toFixed(1)}%`, icon: Percent, tone: '#06B6D4', spark: placementsSeries },
-    { key: 'offers', label: 'Total Offers', value: o.totalOffers || 0, format: (v) => Math.round(v).toLocaleString('en-IN'), icon: Handshake, tone: '#8B5CF6', spark: placementsSeries },
-    { key: 'avg', label: 'Average Package', value: o.averagePackage || 0, format: (v) => formatLPA(v), icon: TrendingUp, tone: '#F59E0B', spark: pkgSeries },
-    { key: 'median', label: 'Median Package', value: o.medianPackage || 0, format: (v) => formatLPA(v), icon: Percent, tone: '#06B6D4', spark: pkgSeries },
-    { key: 'high', label: 'Highest Package', value: o.highestPackage || 0, format: (v) => formatLPA(v), icon: ArrowUpRight, tone: '#EF4444', spark: pkgSeries },
+    { key: 'total', label: 'Total Students', value: o.totalStudents || 0, format: (v) => Math.round(v).toLocaleString('en-IN'), icon: Users, tone: 'primary', spark: placementsSeries },
+    { key: 'placed', label: 'Placed Students', value: o.placedStudents || 0, format: (v) => Math.round(v).toLocaleString('en-IN'), icon: Award, tone: 'success', spark: placementsSeries },
+    { key: 'rate', label: 'Placement Rate', value: rate, format: (v) => `${v.toFixed(1)}%`, icon: Percent, tone: 'success', spark: placementsSeries },
+    { key: 'offers', label: 'Total Offers', value: o.totalOffers || 0, format: (v) => Math.round(v).toLocaleString('en-IN'), icon: Handshake, tone: 'primary', spark: placementsSeries },
+    { key: 'avg', label: 'Average Package', value: o.averagePackage || 0, format: (v) => formatLPA(v), icon: TrendingUp, tone: 'primary', spark: pkgSeries },
+    { key: 'median', label: 'Median Package', value: o.medianPackage || 0, format: (v) => formatLPA(v), icon: Percent, tone: 'primary', spark: pkgSeries },
+    { key: 'high', label: 'Highest Package', value: o.highestPackage || 0, format: (v) => formatLPA(v), icon: ArrowUpRight, tone: 'primary', spark: pkgSeries },
   ];
 
   const funnel = [
@@ -234,7 +236,7 @@ export default function ReportsPage() {
     <div style={{ fontFamily: FONT }}>
       <Confetti trigger={confetti} />
 
-      <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 20, padding: '26px 28px', color: '#fff', background: 'linear-gradient(120deg, #4f46e5, #7c3aed 45%, #0ea5e9)', boxShadow: '0 24px 55px -28px rgba(79,70,229,0.75)' }}>
+      <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 20, padding: '26px 28px', color: '#fff', background: 'linear-gradient(120deg, #4338ca, #6366f1 45%, #818cf8)', boxShadow: '0 24px 55px -28px rgba(79,70,229,0.75)' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 18% 18%, rgba(255,255,255,0.28), transparent 42%), radial-gradient(circle at 82% 0%, rgba(255,255,255,0.18), transparent 38%)' }} />
         <div style={{ position: 'relative', display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ minWidth: 280 }}>
@@ -277,8 +279,8 @@ export default function ReportsPage() {
         )}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14, marginTop: 18 }}>
-        {kpis.map((k) => <Kpi key={k.key} {...k} />)}
+      <div style={{ marginTop: 18 }}>
+        <KpiGrid>{kpis.map((k) => <Kpi key={k.key} {...k} />)}</KpiGrid>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16, marginTop: 16 }}>
@@ -295,8 +297,8 @@ export default function ReportsPage() {
               <RadialBarChart innerRadius="62%" outerRadius="100%" data={[{ name: 'Rate', value: rate, fill: 'url(#healthGrad)' }]} startAngle={90} endAngle={-270}>
                 <defs>
                   <linearGradient id="healthGrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#06B6D4" />
-                    <stop offset="100%" stopColor="#10B981" />
+                    <stop offset="0%" stopColor="#22C55E" />
+                    <stop offset="100%" stopColor="#15803D" />
                   </linearGradient>
                 </defs>
                 <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
@@ -323,7 +325,7 @@ export default function ReportsPage() {
                 <defs>
                   <linearGradient id="branchGrad" x1="0" y1="0" x2="1" y2="0">
                     <stop offset="0%" stopColor="#6366F1" />
-                    <stop offset="100%" stopColor="#8B5CF6" />
+                    <stop offset="100%" stopColor="#4338CA" />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={grid} horizontal={false} />
@@ -362,12 +364,12 @@ export default function ReportsPage() {
               <ComposedChart data={yData}>
                 <defs>
                   <linearGradient id="avgGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#10B981" stopOpacity="0.5" />
-                    <stop offset="100%" stopColor="#10B981" stopOpacity="0" />
+                    <stop offset="0%" stopColor="#16A34A" stopOpacity="0.5" />
+                    <stop offset="100%" stopColor="#16A34A" stopOpacity="0" />
                   </linearGradient>
                   <linearGradient id="branchGrad" x1="0" y1="0" x2="1" y2="0">
                     <stop offset="0%" stopColor="#6366F1" />
-                    <stop offset="100%" stopColor="#8B5CF6" />
+                    <stop offset="100%" stopColor="#4338CA" />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={grid} vertical={false} />
@@ -377,7 +379,7 @@ export default function ReportsPage() {
                 <Tooltip contentStyle={tooltipStyle} labelStyle={chart.tooltipLabelStyle} itemStyle={chart.tooltipItemStyle} />
                 <Legend wrapperStyle={chart.legend} />
                 <Bar yAxisId="l" dataKey="placements" name="Placements" fill="url(#branchGrad)" radius={[6, 6, 0, 0]} maxBarSize={42} />
-                <Area yAxisId="r" type="monotone" dataKey="avgPackage" name="Avg LPA" stroke="#10B981" strokeWidth={2.5} fill="url(#avgGrad)" />
+                <Area yAxisId="r" type="monotone" dataKey="avgPackage" name="Avg LPA" stroke="#16A34A" strokeWidth={2.5} fill="url(#avgGrad)" />
               </ComposedChart>
             </ResponsiveContainer>
           </ChartShell>
@@ -391,8 +393,8 @@ export default function ReportsPage() {
               <BarChart layout="vertical" data={companyData} margin={{ left: 8, right: 20 }}>
                 <defs>
                   <linearGradient id="companyGrad" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#0ea5e9" />
-                    <stop offset="100%" stopColor="#6366F1" />
+                    <stop offset="0%" stopColor="#6366F1" />
+                    <stop offset="100%" stopColor="#4338CA" />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={grid} horizontal={false} />

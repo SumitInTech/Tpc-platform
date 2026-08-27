@@ -48,10 +48,10 @@ export default function StudentDrivesPage() {
   const avgPkg = drives.length ? drives.reduce((s, d) => s + (Number(d.package) || 0), 0) / drives.length : 0;
 
   const kpis = [
-    { key: 'open', label: 'Open Drives', value: drives.length, icon: Briefcase, tone: '#6366F1' },
-    { key: 'applied', label: 'You Applied', value: appliedCount, icon: Send, tone: '#06B6D4' },
-    { key: 'soon', label: 'Closes This Week', value: closesSoon, icon: Clock, tone: '#F59E0B' },
-    { key: 'pkg', label: 'Avg Package', value: avgPkg, format: (v) => formatLPA(v), icon: TrendingUp, tone: '#10B981' },
+    { key: 'open', label: 'Open Drives', value: drives.length, icon: Briefcase, tone: 'primary' },
+    { key: 'applied', label: 'You Applied', value: appliedCount, icon: Send, tone: 'info' },
+    { key: 'soon', label: 'Closes This Week', value: closesSoon, icon: Clock, tone: 'warning' },
+    { key: 'pkg', label: 'Avg Package', value: avgPkg, format: (v) => formatLPA(v), icon: TrendingUp, tone: 'success' },
   ];
 
   const filtered = drives.filter((d) => {
@@ -65,9 +65,9 @@ export default function StudentDrivesPage() {
   });
 
   const segOptions = [
-    { value: '', label: 'All Drives', color: '#6366F1', count: drives.length },
-    { value: 'applied', label: 'Applied', color: '#06B6D4', count: appliedCount, dot: true },
-    { value: 'available', label: 'Available', color: '#10B981', count: drives.length - appliedCount, dot: true },
+    { value: '', label: 'All Drives', color: 'primary', count: drives.length },
+    { value: 'applied', label: 'Applied', color: 'info', count: appliedCount, dot: true },
+    { value: 'available', label: 'Available', color: 'success', count: drives.length - appliedCount, dot: true },
   ];
 
   return (
@@ -93,7 +93,7 @@ export default function StudentDrivesPage() {
         )}
       </div>
 
-      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #06B6D4)" className="mb-3 mt-3" style={{ ...cardStyle, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3 mt-3" style={{ ...cardStyle, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
         <Filter size={16} color="var(--text-sub, #64748b)" />
         <span style={{ fontWeight: 600, fontSize: 13 }}>Filter</span>
         <Segmented options={segOptions} value={filter} onChange={setFilter} />
@@ -128,9 +128,9 @@ export default function StudentDrivesPage() {
                   onMouseEnter={lift} onMouseLeave={rest}
                   style={{ ...cardStyle, position: 'relative', overflow: 'hidden', cursor: 'pointer', transition: 'transform .2s ease, box-shadow .2s ease' }}
                 >
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, #6366F1, #8B5CF6)' }} />
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, #6366F1, #4338CA)' }} />
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
-                    <span className="badge" style={{ background: 'color-mix(in srgb, #6366F1 15%, transparent)', color: '#4338CA', fontWeight: 700 }}>
+                    <span className="badge" style={{ background: 'var(--primary-soft)', color: 'var(--primary-soft-text)', fontWeight: 700 }}>
                       {d.companyId?.name || 'Company'}
                     </span>
                     {app ? (
@@ -157,7 +157,7 @@ export default function StudentDrivesPage() {
                     <span className="small muted" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                       <CalendarDays size={13} /> {closed ? 'Closed' : `Apply by ${formatDate(d.applicationDeadline)}`}
                     </span>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: '#6366F1', fontWeight: 700, fontSize: 13 }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: 'var(--primary)', fontWeight: 700, fontSize: 13 }}>
                       Open <ArrowRight size={14} />
                     </span>
                   </div>

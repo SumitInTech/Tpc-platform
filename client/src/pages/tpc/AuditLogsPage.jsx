@@ -15,24 +15,24 @@ import { formatDateTime, timeAgo, labelize, initials, downloadCSV } from '../../
 import { Hero, Kpi, KpiGrid, Segmented, GlassPanel, SectionHeader, cardStyle } from '../../components/dashboard/primitives';
 
 const FONT = "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
-const ENTITY_PALETTE = ['#6366F1', '#06B6D4', '#10B981', '#F59E0B', '#8B5CF6', '#EF4444', '#EC4899', '#0EA5E9'];
+const ENTITY_PALETTE = ['#6366F1', '#4F46E5', '#4338CA', '#818CF8', '#A5B4FC', '#6D74F0', '#372E9C', '#1E1B4B'];
 
 const ACTION_META = {
-  CREATE_OFFER: { icon: PlusCircle, color: '#6366F1', label: 'Offer Created' },
-  ACCEPT_OFFER: { icon: CheckCircle2, color: '#10B981', label: 'Offer Accepted' },
-  DECLINE_OFFER: { icon: XCircle, color: '#94A3B8', label: 'Offer Declined' },
-  WITHDRAW_OFFER: { icon: Undo2, color: '#F59E0B', label: 'Offer Withdrawn' },
-  REVOKE_OFFER: { icon: Ban, color: '#EF4444', label: 'Offer Revoked' },
-  APPLY_DRIVE: { icon: Send, color: '#06B6D4', label: 'Applied to Drive' },
-  UPDATE_APPLICATION_STATUS: { icon: RefreshCw, color: '#8B5CF6', label: 'Application Updated' },
-  LOGIN: { icon: LogIn, color: '#0EA5E9', label: 'Login' },
-  REGISTER: { icon: UserPlus, color: '#10B981', label: 'Account Registered' },
-  REGISTER_STAFF: { icon: UserCog, color: '#8B5CF6', label: 'Staff Added' },
-  SEED_DATABASE: { icon: Database, color: '#64748B', label: 'Database Seeded' },
+  CREATE_OFFER: { icon: PlusCircle, color: 'var(--primary)', label: 'Offer Created' },
+  ACCEPT_OFFER: { icon: CheckCircle2, color: 'var(--success)', label: 'Offer Accepted' },
+  DECLINE_OFFER: { icon: XCircle, color: 'var(--text-muted)', label: 'Offer Declined' },
+  WITHDRAW_OFFER: { icon: Undo2, color: 'var(--warning)', label: 'Offer Withdrawn' },
+  REVOKE_OFFER: { icon: Ban, color: 'var(--danger)', label: 'Offer Revoked' },
+  APPLY_DRIVE: { icon: Send, color: 'var(--primary)', label: 'Applied to Drive' },
+  UPDATE_APPLICATION_STATUS: { icon: RefreshCw, color: 'var(--primary)', label: 'Application Updated' },
+  LOGIN: { icon: LogIn, color: 'var(--info)', label: 'Login' },
+  REGISTER: { icon: UserPlus, color: 'var(--success)', label: 'Account Registered' },
+  REGISTER_STAFF: { icon: UserCog, color: 'var(--primary)', label: 'Staff Added' },
+  SEED_DATABASE: { icon: Database, color: 'var(--text-muted)', label: 'Database Seeded' },
 };
 
 const metaFor = (action) =>
-  ACTION_META[action] || { icon: Activity, color: '#64748B', label: labelize(action) };
+  ACTION_META[action] || { icon: Activity, color: 'var(--text-muted)', label: labelize(action) };
 
 const entityColor = (type, allTypes = []) => {
   if (!type) return '#64748B';
@@ -102,7 +102,7 @@ function TimelineRow({ log, expanded, onToggle, entityTypes }) {
 
   return (
     <div style={{ position: 'relative', paddingLeft: 56 }}>
-      <span style={{ position: 'absolute', left: 14, top: 18, width: 34, height: 34, borderRadius: 12, display: 'grid', placeItems: 'center', color: '#fff', background: `linear-gradient(135deg, ${color}, ${color}bb)`, boxShadow: `0 12px 24px -14px ${color}`, zIndex: 2 }}>
+      <span style={{ position: 'absolute', left: 14, top: 18, width: 34, height: 34, borderRadius: 12, display: 'grid', placeItems: 'center', color: '#fff', background: `linear-gradient(135deg, ${color}, color-mix(in srgb, ${color} 70%, #0f172a))`, boxShadow: `0 12px 24px -14px ${color}`, zIndex: 2 }}>
         <Icon size={17} />
       </span>
       <div
@@ -189,7 +189,7 @@ export default function AuditLogsPage() {
   const entityOptions = useMemo(() => {
     const counts = Object.fromEntries((stats.data?.data?.byEntityType || []).map((e) => [e._id, e.count]));
     return [
-      { label: 'All Entities', value: '', count: stats.data?.data?.total, color: '#6366F1' },
+      { label: 'All Entities', value: '', count: stats.data?.data?.total, color: 'primary' },
       ...allEntityTypes.map((t) => ({ label: t, value: t, count: counts[t] || 0, color: entityColor(t, allEntityTypes), dot: true })),
     ];
   }, [stats.data, allEntityTypes]);
@@ -204,11 +204,11 @@ export default function AuditLogsPage() {
     const d = stats.data?.data || {};
     const spark = (d.daily || []).map((x) => x.count);
     return [
-      { key: 'total', label: 'Total Events', value: d.total || 0, icon: ScrollText, tone: '#6366F1', spark },
-      { key: 'today', label: 'Today', value: d.today || 0, icon: CalendarDays, tone: '#06B6D4' },
-      { key: 'week', label: 'This Week', value: d.thisWeek || 0, icon: Activity, tone: '#10B981' },
-      { key: 'actors', label: 'Unique Actors', value: d.uniqueActors || 0, icon: Users, tone: '#F59E0B' },
-      { key: 'critical', label: 'Critical Actions', value: d.sensitive || 0, icon: ShieldAlert, tone: '#EF4444' },
+      { key: 'total', label: 'Total Events', value: d.total || 0, icon: ScrollText, tone: 'primary', spark },
+      { key: 'today', label: 'Today', value: d.today || 0, icon: CalendarDays, tone: 'primary' },
+      { key: 'week', label: 'This Week', value: d.thisWeek || 0, icon: Activity, tone: 'primary' },
+      { key: 'actors', label: 'Unique Actors', value: d.uniqueActors || 0, icon: Users, tone: 'primary' },
+      { key: 'critical', label: 'Critical Actions', value: d.sensitive || 0, icon: ShieldAlert, tone: 'danger' },
     ];
   }, [stats.data]);
 
@@ -244,9 +244,9 @@ export default function AuditLogsPage() {
           display: 'inline-flex', alignItems: 'center', gap: 8, border: 'none', cursor: 'pointer',
           padding: '10px 16px', borderRadius: 999, fontWeight: 800, fontSize: 13, color: '#fff',
           background: live
-            ? 'linear-gradient(135deg,#10B981,#06B6D4)'
+            ? 'var(--success)'
             : 'rgba(255,255,255,0.16)', backdropFilter: 'blur(6px)',
-          boxShadow: live ? '0 14px 30px -12px #10B981' : 'none',
+          boxShadow: live ? '0 14px 30px -12px var(--success)' : 'none',
         }}
       >
         <Radio size={15} style={{ animation: live ? 'live-pulse 1.4s infinite' : 'none' }} />
@@ -278,7 +278,7 @@ export default function AuditLogsPage() {
         )}
       </div>
 
-      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #8B5CF6)" className="mb-3 mt-3" style={{ ...cardStyle, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3 mt-3" style={{ ...cardStyle, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
         <Filter size={16} color="var(--text-sub, #64748b)" style={{ flexShrink: 0 }} />
         <span style={{ fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap' }}>Filter by entity</span>
         {stats.loading ? (
@@ -303,7 +303,7 @@ export default function AuditLogsPage() {
               padding: '0 14px', borderRadius: 999, fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap',
               color: criticalOnly ? '#fff' : 'var(--danger-text)',
               borderColor: criticalOnly ? 'transparent' : 'var(--border)',
-              background: criticalOnly ? 'linear-gradient(135deg,#EF4444,#DB2777)' : 'var(--surface)',
+              background: criticalOnly ? 'var(--danger)' : 'var(--surface)',
             }}
           >
             <ShieldAlert size={14} /> Critical only
@@ -315,7 +315,7 @@ export default function AuditLogsPage() {
         icon={ScrollText}
         title="Activity Timeline"
         subtitle={entity ? `Showing ${entity} events` : 'Chronological stream of every audited action'}
-        tone="#6366F1"
+        tone="primary"
       />
 
       {list.loading ? (

@@ -8,6 +8,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { getApiError } from '../../services/api';
 import Button from '../../components/common/Button';
+import BrandLogo from '../../components/common/BrandLogo';
 
 const DEMO_ACCOUNTS = [
   { label: 'TPC Officer', email: 'officer@tpcflow.local', password: 'Officer@123' },
@@ -65,7 +66,7 @@ export default function LoginPage() {
 
   const ROLE_THEME = [
     { c1: '#22C55E', c2: '#10B981' }, // Student — green
-    { c1: '#6366F1', c2: '#8B5CF6' }, // TPC Officer — indigo/violet
+    { c1: '#6366F1', c2: '#4338CA' }, // TPC Officer — indigo
     { c1: '#EC4899', c2: '#F43F5E' }, // Admin — pink/rose
   ];
   const getActiveRole = (em) => {
@@ -106,7 +107,7 @@ export default function LoginPage() {
         <div className="hero-top">
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div className="brand-logo" style={{ width: 44, height: 44 }}>
-              <GraduationCap size={24} />
+              <BrandLogo size={32} />
             </div>
             <div>
               <div style={{ fontSize: 21, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>TPC Flow</div>
@@ -128,7 +129,7 @@ export default function LoginPage() {
               ))}
             </div>
             <div className="orbit-core">
-              <GraduationCap size={34} />
+              <BrandLogo size={60} />
               <span className="orbit-core-badge"><Check size={13} strokeWidth={3} /></span>
             </div>
             <div className="orbit-caption">Hiring at <strong>{company.n}</strong></div>
@@ -197,7 +198,7 @@ export default function LoginPage() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
             <div className="brand-logo" style={{ width: 40, height: 40 }}>
-              <GraduationCap size={20} />
+              <BrandLogo size={30} />
             </div>
             <div>
               <div className="welcome-title">Welcome back</div>

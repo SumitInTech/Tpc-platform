@@ -211,7 +211,7 @@ export default function DriveCreatePage() {
         <ArrowLeft size={14} /> Back to Drives
       </button>
 
-      <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 20, padding: '24px 26px', color: '#fff', background: 'linear-gradient(120deg, #4f46e5, #8B5CF6 50%, #06B6D4)', boxShadow: '0 24px 55px -28px rgba(79,70,229,0.8)' }}>
+      <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 20, padding: '24px 26px', color: '#fff', background: 'linear-gradient(120deg, #4338ca, #6366f1 50%, #818cf8)', boxShadow: '0 24px 55px -28px rgba(79,70,229,0.8)' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 15% 20%, rgba(255,255,255,0.28), transparent 42%), radial-gradient(circle at 85% 0%, rgba(255,255,255,0.18), transparent 38%)' }} />
         <div style={{ position: 'relative' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: 0.9 }}>
@@ -225,7 +225,7 @@ export default function DriveCreatePage() {
               const done = stepState[st.key];
               return (
                 <div key={st.key} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.14)', padding: '8px 14px', borderRadius: 999, fontSize: 13, fontWeight: 700, backdropFilter: 'blur(4px)' }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 22, height: 22, borderRadius: 999, background: done ? '#10B981' : 'rgba(255,255,255,0.25)' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 22, height: 22, borderRadius: 999, background: done ? 'var(--success)' : 'rgba(255,255,255,0.25)' }}>
                     {done ? <Check size={13} /> : <Icon size={13} />}
                   </span>
                   {st.label}
@@ -237,10 +237,10 @@ export default function DriveCreatePage() {
       </div>
 
       <div className="small muted mt-2" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        <Sparkles size={13} color="#8B5CF6" /> {completedSteps} of {STEPS.length} sections ready — the eligibility engine evaluates these rules for every student.
+        <Sparkles size={13} color="var(--primary)" /> {completedSteps} of {STEPS.length} sections ready — the eligibility engine evaluates these rules for every student.
       </div>
 
-      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #8B5CF6)" className="mb-3 mt-3" style={cardStyle}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3 mt-3" style={cardStyle}>
         <div className="card-title">Drive Details</div>
         <div className="form-grid mt-2">
           <div className="field">
@@ -297,7 +297,7 @@ export default function DriveCreatePage() {
               onChange={(e) => setForm({ ...form, driveDate: e.target.value })} />
             {errors.driveDate && <span className="small" style={{ color: 'var(--danger-text)' }}>{errors.driveDate}</span>}
           </div>
-          <div className="field" style={{ gridColumn: '1 / -1' }}>
+          <div className="field" style={{ flexBasis: '100%' }}>
             <label htmlFor="d-desc">Description</label>
             <textarea id="d-desc" className="input" placeholder="About the role, selection process…"
               value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
@@ -305,7 +305,7 @@ export default function DriveCreatePage() {
         </div>
       </GlassPanel>
 
-      <GlassPanel gradient="linear-gradient(90deg, #06B6D4, #8B5CF6)" className="mb-3" style={cardStyle}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3" style={cardStyle}>
         <div className="card-title">Who Can Apply *</div>
         <div className="card-sub">Pick the branches and graduating batches this drive is open to. Students see only drives they can apply to.</div>
         <div className="field mt-3">
@@ -344,7 +344,7 @@ export default function DriveCreatePage() {
         </div>
       </GlassPanel>
 
-      <GlassPanel gradient="linear-gradient(90deg, #8B5CF6, #EC4899)" className="mb-3" style={cardStyle}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3" style={cardStyle}>
         <div className="flex-between">
           <div>
             <div className="card-title">Eligibility Rules</div>

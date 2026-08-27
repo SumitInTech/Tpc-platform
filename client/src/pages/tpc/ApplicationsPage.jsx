@@ -20,12 +20,12 @@ import { exportApplicationsToExcel, exportApplicationsToPDF } from '../../utils/
 import { Hero, Kpi, Segmented, SectionHeader, GlassPanel, KpiGrid, cardStyle } from '../../components/dashboard/primitives';
 
 const STATUS_TONE = {
-  APPLIED: '#06B6D4', SHORTLISTED: '#6366F1', INTERVIEW: '#F59E0B',
-  SELECTED: '#10B981', REJECTED: '#EF4444', WITHDRAWN: '#94A3B8',
+  APPLIED: 'info', SHORTLISTED: 'primary', INTERVIEW: 'warning',
+  SELECTED: 'success', REJECTED: 'danger', WITHDRAWN: 'muted',
 };
 
 const FUNNEL_TONE = {
-  APPLIED: '#94A3B8', SHORTLISTED: '#60A5FA', INTERVIEW: '#818CF8', SELECTED: '#34D399',
+  APPLIED: '#94A3B8', SHORTLISTED: '#A5B4FC', INTERVIEW: '#818CF8', SELECTED: '#6366F1',
 };
 
 function StatusTimeline({ app }) {
@@ -105,15 +105,15 @@ export default function ApplicationsPage() {
   const selectionRate = total ? Math.round((selectedCount / total) * 100) : 0;
 
   const statusOptions = [
-    { value: '', label: 'All', color: '#6366F1', count: all.length },
-    ...APPLICATION_STATUS.map((s) => ({ value: s, label: s, color: STATUS_TONE[s] || '#6366F1', count: byStatus(s), dot: true })),
+    { value: '', label: 'All', color: 'primary', count: all.length },
+    ...APPLICATION_STATUS.map((s) => ({ value: s, label: s, color: STATUS_TONE[s] || 'primary', count: byStatus(s), dot: true })),
   ];
 
   const kpis = [
-    { key: 'total', label: 'Applications', value: total, icon: ClipboardList, tone: '#6366F1' },
-    { key: 'selected', label: 'Selected', value: byStatus('SELECTED'), icon: CheckCircle, tone: '#10B981' },
-    { key: 'pipeline', label: 'In Pipeline', value: byStatus('APPLIED') + byStatus('SHORTLISTED') + byStatus('INTERVIEW'), icon: Activity, tone: '#F59E0B' },
-    { key: 'rejected', label: 'Rejected', value: byStatus('REJECTED') + byStatus('WITHDRAWN'), icon: XCircle, tone: '#EF4444' },
+    { key: 'total', label: 'Applications', value: total, icon: ClipboardList, tone: 'primary' },
+    { key: 'selected', label: 'Selected', value: byStatus('SELECTED'), icon: CheckCircle, tone: 'success' },
+    { key: 'pipeline', label: 'In Pipeline', value: byStatus('APPLIED') + byStatus('SHORTLISTED') + byStatus('INTERVIEW'), icon: Activity, tone: 'info' },
+    { key: 'rejected', label: 'Rejected', value: byStatus('REJECTED') + byStatus('WITHDRAWN'), icon: XCircle, tone: 'danger' },
   ];
 
   const handleDownload = async (format) => {
@@ -189,14 +189,14 @@ export default function ApplicationsPage() {
         )}
       </div>
 
-      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #8B5CF6)" className="mb-3 mt-3" style={cardStyle}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3 mt-3" style={cardStyle}>
         <SectionHeader
           icon={Filter}
           title="Recruitment Funnel"
           subtitle="Live progression from Applied → Selected. Updates instantly as you move candidates."
-          tone="#6366F1"
+          tone="primary"
           action={
-            <span style={{ fontSize: 12, fontWeight: 700, padding: '5px 10px', borderRadius: 999, color: '#10B981', background: 'color-mix(in srgb, #10B981 15%, transparent)' }}>
+            <span style={{ fontSize: 12, fontWeight: 700, padding: '5px 10px', borderRadius: 999, color: 'var(--success)', background: 'var(--success-bg)' }}>
               Selection rate {selectionRate}%
             </span>
           }
@@ -217,12 +217,12 @@ export default function ApplicationsPage() {
         </div>
       </GlassPanel>
 
-      <GlassPanel gradient="linear-gradient(90deg, #06B6D4, #6366F1)" className="mb-3" style={cardStyle}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3" style={cardStyle}>
         <SectionHeader
           icon={Filter}
           title="Filter applications"
           subtitle="Isolate a stage to act on it faster."
-          tone="#06B6D4"
+          tone="primary"
           action={status ? <button type="button" className="btn btn-sm btn-ghost" onClick={() => { setStatus(''); setPage(1); }}>Clear</button> : null}
         />
         <Segmented options={statusOptions} value={status} onChange={(v) => { setStatus(v); setPage(1); }} />

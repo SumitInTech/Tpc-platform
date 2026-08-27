@@ -90,8 +90,8 @@ export default function StudentApplicationsPage() {
 
   const stages = APPLICATION_FLOW;
   const segOptions = [
-    { value: '', label: 'All', color: '#6366F1', count: apps.length },
-    ...stages.map((s) => ({ value: s, label: labelize(s), color: 'var(--info-text)', count: counts[s], dot: true })),
+    { value: '', label: 'All', color: 'primary', count: apps.length },
+    ...stages.map((s) => ({ value: s, label: labelize(s), color: 'info', count: counts[s], dot: true })),
   ];
 
   const open = apps.find((a) => a._id === openId);
@@ -111,15 +111,15 @@ export default function StudentApplicationsPage() {
         ) : (
           <KpiGrid>
             {stages.map((s) => (
-              <Kpi key={s} label={labelize(s)} value={counts[s]} icon={ListChecks} tone="var(--info-text)" />
+              <Kpi key={s} label={labelize(s)} value={counts[s]} icon={ListChecks} tone="info" />
             ))}
-            <Kpi label="Selected" value={selectedCount} icon={CheckCircle2} tone="var(--success-text)" />
+            <Kpi label="Selected" value={selectedCount} icon={CheckCircle2} tone="success" />
           </KpiGrid>
         )}
       </div>
 
       {!appsRes.loading && !appsRes.error && (
-        <GlassPanel gradient="linear-gradient(90deg, #6366F1, #8B5CF6)" className="mb-3 mt-3" style={{ ...cardStyle, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+        <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3 mt-3" style={{ ...cardStyle, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
           <Filter size={16} color="var(--text-sub, #64748b)" />
           <span style={{ fontWeight: 600, fontSize: 13 }}>Stage</span>
           <Segmented options={segOptions} value={filter} onChange={setFilter} />
@@ -150,9 +150,9 @@ export default function StudentApplicationsPage() {
           {filtered.map((a) => (
             <div key={a._id} onClick={() => setOpenId(a._id)} onMouseEnter={lift} onMouseLeave={rest}
               style={{ ...cardStyle, position: 'relative', cursor: 'pointer', overflow: 'hidden', transition: 'transform .2s ease, box-shadow .2s ease' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, #6366F1, #06B6D4)' }} />
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, #6366F1, #4338CA)' }} />
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
-                <span className="badge" style={{ background: 'color-mix(in srgb, #6366F1 15%, transparent)', color: '#4338CA', fontWeight: 700 }}>
+                <span className="badge" style={{ background: 'var(--primary-soft)', color: 'var(--primary-soft-text)', fontWeight: 700 }}>
                   {a.driveId?.companyId?.name || 'Company'}
                 </span>
                 <Badge status={a.status} />
@@ -198,13 +198,13 @@ export default function StudentApplicationsPage() {
             <span>Applied {formatDate(open.appliedAt)}</span>
           </div>
 
-          <GlassPanel gradient="linear-gradient(90deg,#6366F1,#06B6D4)" className="mb-3" style={{ ...cardStyle }}>
+          <GlassPanel gradient="linear-gradient(90deg,#6366F1,#4338CA)" className="mb-3" style={{ ...cardStyle }}>
             <SectionHeader title="Status Timeline" icon={Send} subtitle="How your application is progressing" />
             <MyTimeline history={open.statusHistory} />
           </GlassPanel>
 
           {open.eligibilitySnapshot && (
-            <GlassPanel gradient="linear-gradient(90deg,#10B981,#06B6D4)" className="mb-3" style={{ ...cardStyle }}>
+            <GlassPanel gradient="linear-gradient(90deg,#16A34A,#15803D)" className="mb-3" style={{ ...cardStyle }}>
               <SectionHeader title="Eligibility At Apply" icon={Sparkles} subtitle="Rules evaluated when you submitted" />
               <EligibilitySnapshotView result={open.eligibilitySnapshot} />
             </GlassPanel>

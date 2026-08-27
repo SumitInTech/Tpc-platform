@@ -7,6 +7,7 @@ export const createDrive = (data) => api.post('/drives', data).then((r) => r.dat
 export const updateDrive = (id, data) => api.put(`/drives/${id}`, data).then((r) => r.data);
 export const publishDrive = (id) => api.post(`/drives/${id}/publish`).then((r) => r.data);
 export const closeDrive = (id) => api.post(`/drives/${id}/close`).then((r) => r.data);
+export const reopenDrive = (id) => api.post(`/drives/${id}/reopen`).then((r) => r.data);
 export const deleteDrive = (id) => api.delete(`/drives/${id}`).then((r) => r.data);
 // Student: authoritative eligibility evaluation for self
 export const getMyEligibility = (driveId) => api.get(`/drives/${driveId}/eligibility`).then((r) => r.data);
@@ -15,6 +16,6 @@ export const evaluateEligibility = (driveId, studentId) =>
   api.post(`/drives/${driveId}/eligibility/evaluate`, { studentId }).then((r) => r.data);
 
 export default {
-  getDrives, getDrive, createDrive, updateDrive, publishDrive, closeDrive, deleteDrive,
+  getDrives, getDrive, createDrive, updateDrive, publishDrive, closeDrive, reopenDrive, deleteDrive,
   getMyEligibility, evaluateEligibility, getDriveSummary,
 };

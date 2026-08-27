@@ -19,7 +19,7 @@ import { formatLPA, formatDate, formatDateTime } from '../../utils/formatters';
 import { exportOffersToExcel, exportOffersToPDF } from '../../utils/recordExport';
 import { Hero, Kpi, Segmented, SectionHeader, GlassPanel, KpiGrid, cardStyle } from '../../components/dashboard/primitives';
 
-const OFFER_TONE = { OFFERED: '#06B6D4', ACCEPTED: '#10B981', DECLINED: '#EF4444', WITHDRAWN: '#94A3B8' };
+const OFFER_TONE = { OFFERED: 'info', ACCEPTED: 'success', DECLINED: 'danger', WITHDRAWN: 'muted' };
 const OFFER_STATUSES = ['OFFERED', 'ACCEPTED', 'DECLINED', 'WITHDRAWN'];
 
 function PolicyResult({ decision }) {
@@ -72,15 +72,15 @@ export default function OffersPage() {
   const secured = all.filter((o) => o.status === 'ACCEPTED').reduce((a, o) => a + (Number(o.package) || 0), 0);
 
   const statusOptions = [
-    { value: '', label: 'All', color: '#6366F1', count: all.length },
+    { value: '', label: 'All', color: 'primary', count: all.length },
     ...OFFER_STATUSES.map((s) => ({ value: s, label: s, color: OFFER_TONE[s], count: byStatus(s), dot: true })),
   ];
 
   const kpis = [
-    { key: 'total', label: 'Offers', value: total, icon: Handshake, tone: '#6366F1' },
-    { key: 'accepted', label: 'Accepted', value: byStatus('ACCEPTED'), icon: CheckCircle2, tone: '#10B981' },
-    { key: 'declined', label: 'Declined', value: byStatus('DECLINED') + byStatus('WITHDRAWN'), icon: XCircle, tone: '#EF4444' },
-    { key: 'secured', label: 'Secured Value', value: secured, icon: IndianRupee, tone: '#F59E0B', format: (v) => `₹${Number(v).toLocaleString('en-IN')} LPA` },
+    { key: 'total', label: 'Offers', value: total, icon: Handshake, tone: 'primary' },
+    { key: 'accepted', label: 'Accepted', value: byStatus('ACCEPTED'), icon: CheckCircle2, tone: 'success' },
+    { key: 'declined', label: 'Declined', value: byStatus('DECLINED') + byStatus('WITHDRAWN'), icon: XCircle, tone: 'danger' },
+    { key: 'secured', label: 'Secured Value', value: secured, icon: IndianRupee, tone: 'primary', format: (v) => `₹${Number(v).toLocaleString('en-IN')} LPA` },
   ];
 
   // SELECTED applications are the only valid source of offers
@@ -218,12 +218,12 @@ export default function OffersPage() {
         )}
       </div>
 
-      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #06B6D4)" className="mb-3 mt-3" style={cardStyle}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3 mt-3" style={cardStyle}>
         <SectionHeader
           icon={Filter}
           title="Filter offers"
           subtitle="Break down by offer state."
-          tone="#6366F1"
+          tone="primary"
           action={statusFilter ? <button type="button" className="btn btn-sm btn-ghost" onClick={() => { setStatusFilter(''); setPage(1); }}>Clear</button> : null}
         />
         <Segmented options={statusOptions} value={statusFilter} onChange={(v) => { setStatusFilter(v); setPage(1); }} />
@@ -365,8 +365,8 @@ export default function OffersPage() {
             : `Withdraw the offer for ${pending.offer.studentId?.name}? No placement record exists yet, so nothing else is affected.`
         ) : ''}
         confirmLabel={pending?.mode === 'revoke' ? 'Revoke Offer' : 'Withdraw Offer'}
-        tone={pending?.mode === 'revoke' ? '#EF4444' : '#F59E0B'}
-        gradient={pending?.mode === 'revoke' ? 'linear-gradient(135deg, #EF4444, #DB2777 55%, #7C3AED)' : 'linear-gradient(135deg, #F59E0B, #F97316 55%, #EC4899)'}
+        tone={pending?.mode === 'revoke' ? 'danger' : 'warning'}
+        gradient={pending?.mode === 'revoke' ? 'linear-gradient(135deg, #EF4444, #DC2626 55%, #B91C1C)' : 'linear-gradient(135deg, #F59E0B, #D97706 55%, #B45309)'}
         icon={pending?.mode === 'revoke' ? ShieldAlert : Undo2}
         loading={pendingLoading}
         onConfirm={confirmPending}

@@ -22,18 +22,11 @@ function useCountUp(target, decimals = 0, duration = 900) {
 }
 
 const ACCENTS = {
-  indigo: { color: '#6366F1' },
-  violet: { color: '#8B5CF6' },
-  emerald: { color: '#10B981' },
-  sky: { color: '#0EA5E9' },
-  amber: { color: '#F59E0B' },
-  rose: { color: '#F43F5E' },
-  teal: { color: '#14B8A6' },
   primary: { color: 'var(--primary)' },
   success: { color: 'var(--success)' },
   warning: { color: 'var(--warning)' },
-  danger: { color: 'var(--danger)' },
-  info: { color: 'var(--info)' },
+  danger:  { color: 'var(--danger)' },
+  info:    { color: 'var(--info)' },
 };
 
 const StatCard = ({ icon: Icon, label, value, accent, tone = 'primary', suffix, decimals = 0, loading, onClick }) => {
@@ -60,7 +53,7 @@ const StatCard = ({ icon: Icon, label, value, accent, tone = 'primary', suffix, 
       </div>
       <div className="stat-value">
         {loading ? <span className="skeleton sk-line" style={{ width: 80, display: 'inline-block' }} /> : formatted}
-        {suffix && !loading && <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-muted)' }}>{suffix}</span>}
+        {suffix && !loading && <span style={{ fontSize: 'var(--fs-sm)', fontWeight: 700, color: 'var(--text-muted)' }}>{suffix}</span>}
       </div>
       <div className="stat-label">{label}</div>
       {clickable && <span className="stat-go" aria-hidden="true"><ArrowUpRight size={16} /></span>}

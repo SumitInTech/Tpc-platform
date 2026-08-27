@@ -1,5 +1,13 @@
 import { useEffect } from 'react';
 
+const TONE_HEX = {
+  primary: '#4F46E5',
+  success: '#16A34A',
+  warning: '#D97706',
+  danger: '#DC2626',
+  info: '#0284C7',
+};
+
 export default function ConfirmActionModal({
   open, title, message, confirmLabel = 'Confirm', cancelLabel = 'Cancel',
   tone = '#EF4444', gradient, icon: Icon, loading = false, onConfirm, onCancel,
@@ -13,7 +21,8 @@ export default function ConfirmActionModal({
 
   if (!open) return null;
 
-  const headGradient = gradient || `linear-gradient(135deg, ${tone}, ${tone}bb)`;
+  const toneColor = TONE_HEX[tone] || tone;
+  const headGradient = gradient || `linear-gradient(135deg, ${toneColor}, ${toneColor}bb)`;
 
   return (
     <div
@@ -27,7 +36,7 @@ export default function ConfirmActionModal({
         onClick={(e) => e.stopPropagation()}
         style={{
           width: '100%', maxWidth: 448, background: 'var(--surface, #fff)', borderRadius: 24, overflow: 'hidden',
-          boxShadow: `0 40px 90px -34px rgba(15,23,42,0.75), 0 0 0 1px rgba(255,255,255,0.06) inset, 0 18px 50px -30px ${tone}aa`,
+          boxShadow: `0 40px 90px -34px rgba(15,23,42,0.75), 0 0 0 1px rgba(255,255,255,0.06) inset, 0 18px 50px -30px ${toneColor}aa`,
           animation: 'modalPop .32s cubic-bezier(.2,.7,.3,1)',
         }}
       >

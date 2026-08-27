@@ -17,7 +17,7 @@ import { formatLPA, formatDate } from '../../utils/formatters';
 import { exportPlacementsToExcel, exportPlacementsToPDF } from '../../utils/recordExport';
 import { Hero, Kpi, Segmented, SectionHeader, GlassPanel, KpiGrid, cardStyle } from '../../components/dashboard/primitives';
 
-const PLACEMENT_TONE = { PLACED: '#10B981', JOINING_PENDING: '#F59E0B', JOINED: '#06B6D4', WITHDRAWN: '#EF4444' };
+const PLACEMENT_TONE = { PLACED: 'success', JOINING_PENDING: 'warning', JOINED: 'info', WITHDRAWN: 'danger' };
 const PAGE_SIZE = 10;
 
 const matchesFilters = (r, search, branch, status) => {
@@ -52,12 +52,12 @@ export default function PlacementsPage() {
   const error = summary.error;
 
   const branchOptions = [
-    { value: '', label: 'All Branches', color: '#6366F1', count: allRecords.length },
-    ...branches.map((b) => ({ value: b, label: b, color: '#06B6D4', count: allRecords.filter((r) => r.branch === b).length, dot: true })),
+    { value: '', label: 'All Branches', color: 'primary', count: allRecords.length },
+    ...branches.map((b) => ({ value: b, label: b, color: 'primary', count: allRecords.filter((r) => r.branch === b).length, dot: true })),
   ];
   const statusOptions = [
-    { value: '', label: 'All', color: '#6366F1', count: allRecords.length },
-    ...PLACEMENT_STATUS.map((s) => ({ value: s, label: s, color: PLACEMENT_TONE[s] || '#6366F1', count: allRecords.filter((r) => r.status === s).length, dot: true })),
+    { value: '', label: 'All', color: 'primary', count: allRecords.length },
+    ...PLACEMENT_STATUS.map((s) => ({ value: s, label: s, color: PLACEMENT_TONE[s] || 'primary', count: allRecords.filter((r) => r.status === s).length, dot: true })),
   ];
 
   const handleDownload = async (format) => {
@@ -80,10 +80,10 @@ export default function PlacementsPage() {
   };
 
   const kpis = [
-    { key: 'total', label: 'Records', value: total, icon: Users, tone: '#6366F1' },
-    { key: 'joined', label: 'Joined', value: joined, icon: CheckCircle2, tone: '#06B6D4' },
-    { key: 'pending', label: 'Joining Pending', value: joiningPending, icon: TrendingUp, tone: '#F59E0B' },
-    { key: 'value', label: 'Total Value', value: totalValue, icon: IndianRupee, tone: '#10B981', format: (v) => `₹${Number(v).toLocaleString('en-IN')} LPA` },
+    { key: 'total', label: 'Records', value: total, icon: Users, tone: 'primary' },
+    { key: 'joined', label: 'Joined', value: joined, icon: CheckCircle2, tone: 'info' },
+    { key: 'pending', label: 'Joining Pending', value: joiningPending, icon: TrendingUp, tone: 'warning' },
+    { key: 'value', label: 'Total Value', value: totalValue, icon: IndianRupee, tone: 'success', format: (v) => `₹${Number(v).toLocaleString('en-IN')} LPA` },
   ];
 
   return (
@@ -109,12 +109,12 @@ export default function PlacementsPage() {
         )}
       </div>
 
-      <GlassPanel gradient="linear-gradient(90deg, #10B981, #06B6D4)" className="mb-3 mt-3" style={cardStyle}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3 mt-3" style={cardStyle}>
         <SectionHeader
           icon={Filter}
           title="Find records"
           subtitle="Search a student or slice by branch and status."
-          tone="#10B981"
+          tone="primary"
           action={search || branch || status ? <button type="button" className="btn btn-sm btn-ghost" onClick={() => { setSearchInput(''); setBranch(''); setStatus(''); setPage(1); }}>Clear</button> : null}
         />
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' }}>

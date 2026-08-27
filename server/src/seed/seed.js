@@ -40,7 +40,7 @@ async function seed() {
 
     console.log('[SEED] Creating Users...');
     const users = await User.insertMany([
-      { name: 'System Admin', email: 'admin@tpcflow.local', passwordHash: adminHash, role: 'ADMIN' },
+      { name: 'Super Admin', email: 'admin@tpcflow.local', passwordHash: adminHash, role: 'ADMIN' },
       { name: 'TPC Officer', email: 'officer@tpcflow.local', passwordHash: officerHash, role: 'TPC_OFFICER' },
       { name: 'Rahul Sharma', email: 'rahul@tpcflow.local', passwordHash: studentHash, role: 'STUDENT' },
       { name: 'Priya Singh', email: 'priya@tpcflow.local', passwordHash: studentHash, role: 'STUDENT' },

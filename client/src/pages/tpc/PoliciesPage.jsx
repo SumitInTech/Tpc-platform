@@ -26,11 +26,11 @@ const EMPTY_FORM = {
 };
 
 const POLICY_META = {
-  MAX_ACCEPTED_OFFERS: { color: '#6366F1', icon: ListChecks },
-  MAX_TOTAL_OFFERS: { color: '#06B6D4', icon: Layers },
-  MIN_PACKAGE_FOR_ADDITIONAL_APPLICATION: { color: '#F59E0B', icon: IndianRupee },
-  PLACED_STUDENT_RESTRICTION: { color: '#EF4444', icon: Ban },
-  BRANCH_SPECIFIC_RESTRICTION: { color: '#8B5CF6', icon: MapPin },
+  MAX_ACCEPTED_OFFERS: { color: 'primary', icon: ListChecks },
+  MAX_TOTAL_OFFERS: { color: 'primary', icon: Layers },
+  MIN_PACKAGE_FOR_ADDITIONAL_APPLICATION: { color: 'primary', icon: IndianRupee },
+  PLACED_STUDENT_RESTRICTION: { color: 'primary', icon: Ban },
+  BRANCH_SPECIFIC_RESTRICTION: { color: 'primary', icon: MapPin },
 };
 
 const buildConfiguration = (type, configValue, branches) => {
@@ -65,7 +65,7 @@ function Toggle({ active, onClick, loading }) {
   return (
     <button type="button" onClick={onClick} disabled={loading}
       style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: 'none', background: 'transparent', cursor: 'pointer', padding: 0 }}>
-      <span style={{ width: 44, height: 24, borderRadius: 999, padding: 3, background: active ? 'linear-gradient(135deg,#10B981,#06B6D4)' : 'var(--surface-2,#e2e8f0)', transition: 'background .25s', position: 'relative' }}>
+      <span style={{ width: 44, height: 24, borderRadius: 999, padding: 3, background: active ? 'var(--success)' : 'var(--surface-2,#e2e8f0)', transition: 'background .25s', position: 'relative' }}>
         <span style={{ position: 'absolute', top: 3, left: active ? 20 : 3, width: 18, height: 18, borderRadius: 999, background: '#fff', boxShadow: '0 2px 6px rgba(0,0,0,.25)', transition: 'left .25s' }} />
       </span>
       <span style={{ fontSize: 12, fontWeight: 700, color: active ? 'var(--success-text)' : 'var(--text-sub)' }}>{active ? 'Active' : 'Inactive'}</span>
@@ -78,13 +78,13 @@ function PolicyCard({ p, onToggle, toggling, onArchive }) {
   const Icon = meta.icon;
   return (
     <div style={{ ...cardStyle, position: 'relative', overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column', padding: 20, transition: 'transform .2s ease, box-shadow .2s ease' }}
-      onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = `0 24px 48px -26px ${meta.color}`; }}
+      onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 24px 48px -26px var(--primary)'; }}
       onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = cardStyle.boxShadow; }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg, ${meta.color}, #8B5CF6)` }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, var(--primary), #4338CA)' }} />
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
         <div style={{ display: 'flex', gap: 12, alignItems: 'center', minWidth: 0 }}>
-          <span style={{ display: 'inline-flex', padding: 11, borderRadius: 13, color: '#fff', background: `linear-gradient(135deg, ${meta.color}, ${meta.color}bb)`, boxShadow: `0 12px 24px -14px ${meta.color}`, flexShrink: 0 }}>
+          <span style={{ display: 'inline-flex', padding: 11, borderRadius: 13, color: '#fff', background: 'var(--primary)', boxShadow: '0 12px 24px -14px var(--primary)', flexShrink: 0 }}>
             <Icon size={18} />
           </span>
           <div style={{ minWidth: 0 }}>
@@ -143,10 +143,10 @@ export default function PoliciesPage() {
   const typesCovered = new Set(policies.map((p) => p.type)).size;
 
   const kpis = [
-    { key: 'total', label: 'Policies', value: total, icon: ShieldCheck, tone: '#6366F1' },
-    { key: 'active', label: 'Active', value: active, icon: Power, tone: '#10B981' },
-    { key: 'inactive', label: 'Inactive', value: inactive, icon: Ban, tone: '#94A3B8' },
-    { key: 'types', label: 'Policy Types', value: typesCovered, icon: Layers, tone: '#F59E0B' },
+    { key: 'total', label: 'Policies', value: total, icon: ShieldCheck, tone: 'primary' },
+    { key: 'active', label: 'Active', value: active, icon: Power, tone: 'success' },
+    { key: 'inactive', label: 'Inactive', value: inactive, icon: Ban, tone: 'muted' },
+    { key: 'types', label: 'Policy Types', value: typesCovered, icon: Layers, tone: 'primary' },
   ];
 
   const openCreate = () => { setForm(EMPTY_FORM); setErrors({}); setFormOpen(true); };
@@ -259,12 +259,12 @@ export default function PoliciesPage() {
         )}
       </div>
 
-      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #8B5CF6)" style={{ ...cardStyle, marginTop: 22, marginBottom: 22 }}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" style={{ ...cardStyle, marginTop: 22, marginBottom: 22 }}>
         <SectionHeader
           icon={FlaskConical}
           title="Policy Sandbox"
           subtitle="See exactly what the engine would decide for a student right now."
-          tone="#6366F1"
+          tone="primary"
         />
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 14 }}>
           <select className="input" value={evalStudent} onChange={(e) => setEvalStudent(e.target.value)}
@@ -278,7 +278,7 @@ export default function PoliciesPage() {
           </select>
           <Button
             variant="secondary" disabled={!evalStudent || evaluating} loading={evaluating} onClick={runEval}
-            style={{ background: 'linear-gradient(135deg,#6366F1,#8B5CF6)', borderColor: 'transparent', color: '#fff' }}
+            style={{ background: 'var(--primary)', borderColor: 'transparent', color: '#fff' }}
           >
             Evaluate All Active Policies
           </Button>
@@ -291,7 +291,7 @@ export default function PoliciesPage() {
             background: evalResult.allowed ? 'color-mix(in srgb, var(--success) 8%, var(--surface))' : 'color-mix(in srgb, var(--danger) 8%, var(--surface))',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ display: 'inline-flex', padding: 10, borderRadius: 12, color: '#fff', background: evalResult.allowed ? 'linear-gradient(135deg,#10B981,#06B6D4)' : 'linear-gradient(135deg,#EF4444,#DB2777)' }}>
+              <span style={{ display: 'inline-flex', padding: 10, borderRadius: 12, color: '#fff', background: evalResult.allowed ? 'var(--success)' : 'var(--danger)' }}>
                 {evalResult.allowed ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
               </span>
               <div>
@@ -314,7 +314,7 @@ export default function PoliciesPage() {
         icon={ShieldCheck}
         title="Active Guardrails"
         subtitle={`${active} of ${total} policies are live and guarding workflow actions.`}
-        tone="#10B981"
+        tone="primary"
         action={<Button icon={Plus} onClick={openCreate}>New Policy</Button>}
       />
 
@@ -419,8 +419,8 @@ export default function PoliciesPage() {
         title="Archive policy?"
         message={`"${deleting?.name}" will be deactivated. Historical decisions keep the version that evaluated them.`}
         confirmLabel="Deactivate & Archive"
-        tone="#EF4444"
-        gradient="linear-gradient(135deg, #EF4444, #DB2777 55%, #7C3AED)"
+        tone="danger"
+        gradient="linear-gradient(135deg, #EF4444, #DC2626 55%, #B91C1C)"
         icon={Trash2}
         onConfirm={confirmDelete}
         onCancel={() => setDeleting(null)}

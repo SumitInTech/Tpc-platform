@@ -6,6 +6,7 @@ const Button = ({
   loading = false,
   children,
   disabled,
+  className = '',
   ...rest
 }) => {
   const cls = [
@@ -13,6 +14,7 @@ const Button = ({
     `btn-${variant}`,
     size === 'sm' ? 'btn-sm' : '',
     block ? 'btn-block' : '',
+    className,
   ]
     .filter(Boolean)
     .join(' ');

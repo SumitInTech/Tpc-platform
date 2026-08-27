@@ -33,8 +33,8 @@ function CgpaRing({ value, loading }) {
       <svg viewBox="0 0 130 130">
         <defs>
           <linearGradient id="cgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#22C55E" />
-            <stop offset="100%" stopColor="#14B8A6" />
+            <stop offset="0%" stopColor="#6366F1" />
+            <stop offset="100%" stopColor="#4338CA" />
           </linearGradient>
         </defs>
         <circle cx="65" cy="65" r={R} stroke="var(--border)" strokeWidth="11" fill="none" />
@@ -140,12 +140,12 @@ export default function StudentDashboard() {
         ))}
       </div>
 
-      <div className="grid-stats stu-stats">
-        <StatCard icon={Briefcase} label="Open Drives" value={drives.length} accent="emerald" loading={drivesRes.loading} onClick={() => navigate('/student/drives')} />
-        <StatCard icon={FileText} label="My Applications" value={apps.length} accent="sky" loading={appsRes.loading} onClick={() => navigate('/student/applications')} />
-        <StatCard icon={Star} label="Shortlisted / Beyond" value={shortlisted} accent="amber" loading={appsRes.loading} onClick={() => navigate('/student/applications')} />
-        <StatCard icon={Handshake} label="Offers" value={offers.length} accent="violet" loading={offersRes.loading} onClick={() => navigate('/student/offers')} />
-        <StatCard icon={Users} label="In Interview" value={interviewCount} accent="teal" loading={appsRes.loading} onClick={() => navigate('/student/applications')} />
+      <div className="grid-stats stu-stats stagger-in">
+        <StatCard icon={Briefcase} label="Open Drives" value={drives.length} accent="primary" loading={drivesRes.loading} onClick={() => navigate('/student/drives')} />
+        <StatCard icon={FileText} label="My Applications" value={apps.length} accent="primary" loading={appsRes.loading} onClick={() => navigate('/student/applications')} />
+        <StatCard icon={Star} label="Shortlisted / Beyond" value={shortlisted} accent="warning" loading={appsRes.loading} onClick={() => navigate('/student/applications')} />
+        <StatCard icon={Handshake} label="Offers" value={offers.length} accent="success" loading={offersRes.loading} onClick={() => navigate('/student/offers')} />
+        <StatCard icon={Users} label="In Interview" value={interviewCount} accent="info" loading={appsRes.loading} onClick={() => navigate('/student/applications')} />
       </div>
 
       <div className="grid-2 stu-row">

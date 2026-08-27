@@ -21,11 +21,11 @@ import { exportDrivesToExcel, exportDrivesToPDF } from '../../utils/recordExport
 import { Hero, Kpi, Ring, Segmented, SectionHeader, GlassPanel, KpiGrid, cardStyle } from '../../components/dashboard/primitives';
 
 const STATUS_META = {
-  PUBLISHED: { color: '#10B981', label: 'Published' },
-  DRAFT: { color: '#F59E0B', label: 'Draft' },
-  CLOSED: { color: '#8B5CF6', label: 'Closed' },
-  COMPLETED: { color: '#06B6D4', label: 'Completed' },
-  CANCELLED: { color: '#EF4444', label: 'Cancelled' },
+  PUBLISHED: { color: 'success', label: 'Published' },
+  DRAFT: { color: 'warning', label: 'Draft' },
+  CLOSED: { color: 'primary', label: 'Closed' },
+  COMPLETED: { color: 'info', label: 'Completed' },
+  CANCELLED: { color: 'danger', label: 'Cancelled' },
 };
 
 export default function DrivesPage() {
@@ -52,11 +52,11 @@ export default function DrivesPage() {
   const publishedPct = s.total ? Math.round((s.published / s.total) * 100) : 0;
 
   const statusOptions = [
-    { value: '', label: 'All', color: '#6366F1', count: s.total },
+    { value: '', label: 'All', color: 'primary', count: s.total },
     ...DRIVE_STATUS.map((st) => ({
       value: st,
       label: STATUS_META[st]?.label || labelize(st),
-      color: STATUS_META[st]?.color || '#6366F1',
+      color: STATUS_META[st]?.color || 'primary',
       count: s[st?.toLowerCase()] ?? 0,
       dot: true,
     })),
@@ -88,10 +88,10 @@ export default function DrivesPage() {
   };
 
   const kpis = [
-    { key: 'total', label: 'Total Drives', value: s.total || 0, icon: Megaphone, tone: '#6366F1' },
-    { key: 'published', label: 'Published', value: s.published || 0, icon: TrendingUp, tone: '#10B981' },
-    { key: 'draft', label: 'Draft', value: s.draft || 0, icon: CalendarDays, tone: '#F59E0B' },
-    { key: 'closed', label: 'Closed / Done', value: (s.closed || 0) + (s.completed || 0), icon: ShieldCheck, tone: '#8B5CF6' },
+    { key: 'total', label: 'Total Drives', value: s.total || 0, icon: Megaphone, tone: 'primary' },
+    { key: 'published', label: 'Published', value: s.published || 0, icon: TrendingUp, tone: 'success' },
+    { key: 'draft', label: 'Draft', value: s.draft || 0, icon: CalendarDays, tone: 'warning' },
+    { key: 'closed', label: 'Closed / Done', value: (s.closed || 0) + (s.completed || 0), icon: ShieldCheck, tone: 'primary' },
   ];
 
   return (
@@ -112,7 +112,7 @@ export default function DrivesPage() {
         }
         aside={
           <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
-            <Ring value={publishedPct} size={118} stroke={13} color="#10B981" track="rgba(255,255,255,0.25)" textColor="#fff" big />
+            <Ring value={publishedPct} size={118} stroke={13} color="var(--success)" track="rgba(255,255,255,0.25)" textColor="#fff" big />
             <div style={{ maxWidth: 170 }}>
               <div style={{ fontSize: 13, opacity: 0.9, fontWeight: 700 }}>Published</div>
               <div style={{ fontSize: 13, opacity: 0.85, marginTop: 4, lineHeight: 1.45 }}>Share of drives currently live and open to applications.</div>
@@ -121,12 +121,12 @@ export default function DrivesPage() {
         }
       />
 
-      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #8B5CF6)" style={{ marginTop: 18 }}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" style={{ marginTop: 18 }}>
         <SectionHeader
           icon={Filter}
           title="Refine drives"
           subtitle="Slice the pipeline by status or recruiting partner."
-          tone="#6366F1"
+          tone="primary"
           action={(status || companyId) && (
             <button type="button" className="btn btn-sm btn-ghost" onClick={() => { setStatus(''); setCompanyId(''); setPage(1); }}>
               <X size={13} /> Clear
@@ -179,13 +179,13 @@ export default function DrivesPage() {
           <div className="grid-cards" style={{ marginTop: 18 }}>
             {drives.map((d) => {
               const ruleCount = d.eligibilityRules?.rules?.length || 0;
-              const meta = STATUS_META[d.status] || { color: '#6366F1' };
+              const meta = STATUS_META[d.status] || { color: 'primary' };
               return (
                 <Link key={d._id} to={`/tpc/drives/${d._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <div style={{ ...cardStyle, position: 'relative', overflow: 'hidden', height: '100%', transition: 'transform .2s ease, box-shadow .2s ease' }}
                     onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = '0 26px 50px -26px rgba(99,102,241,0.65)'; }}
                     onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = cardStyle.boxShadow; }}>
-                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg, ${meta.color}, #8B5CF6)` }} />
+                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg, ${meta.color}, color-mix(in srgb, ${meta.color} 45%, #1F2937))` }} />
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
                       <span className="badge" style={{ background: 'var(--primary-soft)', color: 'var(--primary-soft-text)' }}>
                         {d.companyId?.name || 'Company'}

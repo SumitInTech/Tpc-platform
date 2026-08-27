@@ -27,7 +27,7 @@ const emptyForm = {
   phone: '', branch: '', department: '', batch: '', graduationYear: '', backlogs: '', activeBacklogs: '',
 };
 
-const statusTone = (s) => s === 'PLACED' ? '#10B981' : s === 'NOT_ELIGIBLE' ? '#F59E0B' : s === 'BLOCKED' ? '#EF4444' : '#6366F1';
+const statusTone = (s) => s === 'PLACED' ? 'success' : s === 'NOT_ELIGIBLE' ? 'warning' : s === 'BLOCKED' ? 'danger' : 'primary';
 
 export default function StudentProfilePage() {
   const navigate = useNavigate();
@@ -173,15 +173,15 @@ export default function StudentProfilePage() {
 
       <div className="mt-3">
         <KpiGrid>
-          <Kpi label="CGPA" value={profile?.cgpa ?? 0} icon={GraduationCap} tone="#10B981" />
+          <Kpi label="CGPA" value={profile?.cgpa ?? 0} icon={GraduationCap} tone="primary" />
           <TextKpi label="Placement Status" value={labelize(profile?.placementStatus)} icon={BadgeCheck} tone={statusTone(profile?.placementStatus)} />
-          <Kpi label="Accepted Offers" value={profile?.acceptedOffersCount || 0} icon={PartyPopper} tone="#6366F1" />
-          <Kpi label="Highest Package" value={profile?.highestAcceptedPackage || 0} format={(v) => formatLPA(v)} icon={Briefcase} tone="#06B6D4" />
+          <Kpi label="Accepted Offers" value={profile?.acceptedOffersCount || 0} icon={PartyPopper} tone="success" />
+          <Kpi label="Highest Package" value={profile?.highestAcceptedPackage || 0} format={(v) => formatLPA(v)} icon={Briefcase} tone="primary" />
         </KpiGrid>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginTop: 16, alignItems: 'start' }}>
-        <GlassPanel gradient="linear-gradient(90deg,#6366F1,#8B5CF6)" style={{ ...cardStyle }}>
+        <GlassPanel gradient="linear-gradient(90deg,#6366F1,#4338CA)" style={{ ...cardStyle }}>
           <SectionHeader title="Academic Record" icon={GraduationCap} />
           <div style={{ display: 'grid', gap: 10, marginTop: 6 }}>
             <Row icon={Hash} label="Student ID" value={profile?.studentId || '—'} />
@@ -194,7 +194,7 @@ export default function StudentProfilePage() {
           </div>
         </GlassPanel>
 
-        <GlassPanel gradient="linear-gradient(90deg,#10B981,#06B6D4)" style={{ ...cardStyle }}>
+        <GlassPanel gradient="linear-gradient(90deg,#16A34A,#15803D)" style={{ ...cardStyle }}>
           <SectionHeader title="Placement Snapshot" icon={BadgeCheck} />
           {profile?.careerOutcome?.company ? (
             <div style={{ marginTop: 6 }}>
@@ -217,12 +217,12 @@ export default function StudentProfilePage() {
         </GlassPanel>
       </div>
 
-      <GlassPanel gradient="linear-gradient(90deg,#8B5CF6,#EC4899)" className="mt-3" style={{ ...cardStyle }}>
+      <GlassPanel gradient="linear-gradient(90deg,#6366F1,#4338CA)" className="mt-3" style={{ ...cardStyle }}>
         <SectionHeader title="Tech Stack" icon={Sparkles} subtitle="Yours to edit — highlighted when you apply to a drive" />
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '12px 0' }}>
           {skills.length === 0 && <span className="small muted">No skills added yet.</span>}
           {skills.map((s) => (
-            <span key={s} className="badge" style={{ background: 'color-mix(in srgb, #8B5CF6 16%, transparent)', color: '#7C3AED', fontWeight: 700, padding: '6px 10px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <span key={s} className="badge" style={{ background: 'var(--primary-soft)', color: 'var(--primary-soft-text)', fontWeight: 700, padding: '6px 10px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
               {s}
               <button onClick={() => handleSkillRemove(s)} aria-label={`Remove ${s}`} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', display: 'inline-flex', padding: 0 }}><X size={13} /></button>
             </span>
@@ -238,7 +238,7 @@ export default function StudentProfilePage() {
           <button onClick={handleSkillAdd} className="btn" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: '1px solid var(--border, #e2e8f0)', cursor: 'pointer', padding: '10px 18px', borderRadius: 10, fontWeight: 800, color: 'var(--text)' }}>
             <Plus size={15} /> Add
           </button>
-          <button onClick={handleSkillsSave} disabled={savingSkills} className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: 'none', cursor: 'pointer', padding: '10px 18px', borderRadius: 10, fontWeight: 800, color: '#fff', background: 'linear-gradient(90deg,#6366F1,#8B5CF6)' }}>
+          <button onClick={handleSkillsSave} disabled={savingSkills} className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: 'none', cursor: 'pointer', padding: '10px 18px', borderRadius: 10, fontWeight: 800, color: '#fff', background: 'var(--primary)' }}>
             <Save size={15} /> {savingSkills ? 'Saving…' : 'Save Stack'}
           </button>
         </div>
@@ -271,7 +271,7 @@ export default function StudentProfilePage() {
           >
             Cancel
           </button>
-          <button className="btn-primary" onClick={handleEditSave} disabled={saving} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: 'none', cursor: 'pointer', padding: '10px 18px', borderRadius: 10, fontWeight: 800, color: '#fff', background: 'linear-gradient(90deg,#6366F1,#8B5CF6)' }}>
+          <button className="btn-primary" onClick={handleEditSave} disabled={saving} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: 'none', cursor: 'pointer', padding: '10px 18px', borderRadius: 10, fontWeight: 800, color: '#fff', background: 'var(--primary)' }}>
             <Save size={15} /> {saving ? 'Saving…' : 'Save Changes'}
           </button>
         </div>

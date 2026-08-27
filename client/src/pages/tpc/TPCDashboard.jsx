@@ -25,7 +25,7 @@ import { getChartTheme } from '../../utils/chartTheme';
 import { Hero, Kpi, KpiGrid, GlassPanel, SectionHeader, Ring, cardStyle } from '../../components/dashboard/primitives';
 
 const FONT = "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
-const PIE_COLORS = ['#6366F1', '#8B5CF6', '#06B6D4', '#F59E0B', '#10B981', '#EF4444'];
+const PIE_COLORS = ['#6366F1', '#4338CA', '#1E1B4B', '#A5B4FC', '#818CF8', '#4F46E5'];
 
 const PIPELINE = [
   { icon: Settings, label: 'Configure' },
@@ -41,13 +41,13 @@ function PlacementGauge({ value, loading, sub, avg, median, highest }) {
   return (
     <div style={{ display: 'flex', gap: 22, alignItems: 'center', flexWrap: 'wrap' }}>
       <div style={{ position: 'relative', flex: '0 0 auto' }}>
-        <Ring value={value || 0} size={150} stroke={15} color="#10B981" track="var(--border, #e2e8f0)" textColor="var(--text, #0f172a)" big />
+        <Ring value={value || 0} size={150} stroke={15} color="var(--success)" track="var(--border, #e2e8f0)" textColor="var(--text, #0f172a)" big />
       </div>
       <div style={{ flex: 1, minWidth: 200, display: 'flex', flexDirection: 'column', gap: 10 }}>
         <div className="small muted" style={{ fontWeight: 700 }}>{loading ? 'Computing…' : sub}</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><IndianRupee size={15} style={{ color: '#F59E0B' }} /><div style={{ display: 'flex', flexDirection: 'column' }}><span className="small muted">Avg Package</span><strong>{loading ? '—' : formatLPA(avg)}</strong></div></div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><IndianRupee size={15} style={{ color: '#06B6D4' }} /><div style={{ display: 'flex', flexDirection: 'column' }}><span className="small muted">Median Package</span><strong>{loading ? '—' : formatLPA(median)}</strong></div></div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><IndianRupee size={15} style={{ color: '#EF4444' }} /><div style={{ display: 'flex', flexDirection: 'column' }}><span className="small muted">Highest Package</span><strong>{loading ? '—' : formatLPA(highest)}</strong></div></div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><IndianRupee size={15} style={{ color: 'var(--primary)' }} /><div style={{ display: 'flex', flexDirection: 'column' }}><span className="small muted">Avg Package</span><strong>{loading ? '—' : formatLPA(avg)}</strong></div></div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><IndianRupee size={15} style={{ color: 'var(--primary)' }} /><div style={{ display: 'flex', flexDirection: 'column' }}><span className="small muted">Median Package</span><strong>{loading ? '—' : formatLPA(median)}</strong></div></div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><IndianRupee size={15} style={{ color: 'var(--primary)' }} /><div style={{ display: 'flex', flexDirection: 'column' }}><span className="small muted">Highest Package</span><strong>{loading ? '—' : formatLPA(highest)}</strong></div></div>
       </div>
     </div>
   );
@@ -127,19 +127,19 @@ export default function TPCDashboard() {
     : 'Awaiting first placement records';
 
   const stats = [
-    { icon: Users, label: 'Total Students', value: o.totalStudents ?? 0, tone: '#6366F1', spark: placementsSeries, onClick: () => navigate('/tpc/students') },
-    { icon: Megaphone, label: 'Active Drives', value: o.activeDrives ?? 0, tone: '#06B6D4', onClick: () => navigate('/tpc/drives') },
-    { icon: Building2, label: 'Companies', value: o.totalCompanies ?? 0, tone: '#F59E0B', onClick: () => navigate('/tpc/companies') },
-    { icon: ClipboardList, label: 'Applications', value: o.totalApplications ?? 0, tone: '#8B5CF6', spark: placementsSeries, onClick: () => navigate('/tpc/applications') },
-    { icon: Handshake, label: 'Offers', value: o.totalOffers ?? 0, tone: '#EC4899', spark: placementsSeries, onClick: () => navigate('/tpc/offers') },
-    { icon: Award, label: 'Placed Students', value: o.placedStudents ?? 0, tone: '#10B981', spark: placementsSeries, onClick: () => navigate('/tpc/placements') },
-    { icon: IndianRupee, label: 'Avg Package', value: o.averagePackage ?? 0, format: (v) => formatLPA(v), tone: '#F59E0B', spark: pkgSeries, onClick: () => navigate('/tpc/reports') },
+    { icon: Users, label: 'Total Students', value: o.totalStudents ?? 0, tone: 'primary', spark: placementsSeries, onClick: () => navigate('/tpc/students') },
+    { icon: Megaphone, label: 'Active Drives', value: o.activeDrives ?? 0, tone: 'primary', spark: placementsSeries, onClick: () => navigate('/tpc/drives') },
+    { icon: Building2, label: 'Companies', value: o.totalCompanies ?? 0, tone: 'primary', spark: placementsSeries, onClick: () => navigate('/tpc/companies') },
+    { icon: ClipboardList, label: 'Applications', value: o.totalApplications ?? 0, tone: 'primary', spark: placementsSeries, onClick: () => navigate('/tpc/applications') },
+    { icon: Handshake, label: 'Offers', value: o.totalOffers ?? 0, tone: 'primary', spark: placementsSeries, onClick: () => navigate('/tpc/offers') },
+    { icon: Award, label: 'Placed Students', value: o.placedStudents ?? 0, tone: 'success', spark: placementsSeries, onClick: () => navigate('/tpc/placements') },
+    { icon: IndianRupee, label: 'Avg Package', value: o.averagePackage ?? 0, format: (v) => formatLPA(v), tone: 'primary', spark: pkgSeries, onClick: () => navigate('/tpc/reports') },
   ];
 
   const livePill = (
     <button type="button" onClick={() => refreshRef.current()} title="Click to refresh now"
       style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1px solid var(--border)', background: 'var(--surface)', cursor: 'pointer', padding: '8px 14px', borderRadius: 999, fontWeight: 700, fontSize: 12.5, color: 'var(--success-text)' }}>
-      <span style={{ width: 9, height: 9, borderRadius: 999, background: '#10B981', boxShadow: '0 0 0 0 rgba(16,185,129,0.6)', animation: 'live-pulse 1.6s infinite' }} />
+      <span style={{ width: 9, height: 9, borderRadius: 999, background: 'var(--success)', boxShadow: '0 0 0 0 rgba(16,185,129,0.6)', animation: 'live-pulse 1.6s infinite' }} />
       Live
       <span style={{ color: 'var(--text-muted)' }}>{secsAgo == null ? 'syncing…' : secsAgo < 2 ? 'just now' : `${secsAgo}s ago`}</span>
       <RefreshCw size={13} style={{ marginLeft: 2 }} />
@@ -150,7 +150,7 @@ export default function TPCDashboard() {
     <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
       {livePill}
       <div style={{ display: 'flex', gap: 8 }}>
-        <span style={{ display: 'grid', placeItems: 'center', width: 38, height: 38, borderRadius: 12, background: 'linear-gradient(135deg,#6366F1,#8B5CF6)', color: '#fff', boxShadow: '0 14px 28px -14px #6366F1' }}><Radio size={18} /></span>
+        <span style={{ display: 'grid', placeItems: 'center', width: 38, height: 38, borderRadius: 12, background: 'var(--primary)', color: '#fff', boxShadow: '0 14px 28px -14px #6366F1' }}><Radio size={18} /></span>
       </div>
     </div>
   );
@@ -165,28 +165,28 @@ export default function TPCDashboard() {
         aside={heroAside}
         actions={
           <>
-            <button className="btn-shimmer" onClick={() => navigate('/tpc/drives/new')} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: 'none', cursor: 'pointer', padding: '10px 16px', borderRadius: 12, fontWeight: 800, fontSize: 13, color: '#fff', background: 'linear-gradient(135deg,#6366F1,#8B5CF6)' }}><Plus size={15} /> New Drive</button>
+            <button className="btn-shimmer" onClick={() => navigate('/tpc/drives/new')} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: 'none', cursor: 'pointer', padding: '10px 16px', borderRadius: 12, fontWeight: 800, fontSize: 13, color: '#fff', background: 'var(--primary)' }}><Plus size={15} /> New Drive</button>
             <button onClick={() => navigate('/tpc/offers')} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1px solid rgba(255,255,255,0.4)', cursor: 'pointer', padding: '10px 16px', borderRadius: 12, fontWeight: 800, fontSize: 13, color: '#fff', background: 'rgba(255,255,255,0.14)' }}><Send size={15} /> Create Offer</button>
             <button onClick={() => navigate('/tpc/reports')} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1px solid rgba(255,255,255,0.4)', cursor: 'pointer', padding: '10px 16px', borderRadius: 12, fontWeight: 800, fontSize: 13, color: '#fff', background: 'rgba(255,255,255,0.14)' }}><Download size={15} /> Export</button>
           </>
         }
       />
 
-      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #8B5CF6)" className="mb-3 mt-3" style={{ ...cardStyle }}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3 mt-3" style={{ ...cardStyle }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, overflowX: 'auto' }}>
           {PIPELINE.map((s, i) => {
             const last = i === PIPELINE.length - 1;
             return (
               <Fragment key={s.label}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, minWidth: 70 }}>
-                  <span style={{ display: 'grid', placeItems: 'center', width: 42, height: 42, borderRadius: 13, color: '#fff', background: last ? 'linear-gradient(135deg,#10B981,#06B6D4)' : 'linear-gradient(135deg,#6366F1,#8B5CF6)', boxShadow: last ? '0 14px 28px -14px #10B981' : '0 14px 28px -16px #6366F1', animation: last ? 'live-pulse 1.8s infinite' : 'none' }}>
+                  <span style={{ display: 'grid', placeItems: 'center', width: 42, height: 42, borderRadius: 13, color: '#fff', background: last ? 'var(--success)' : 'var(--primary)', boxShadow: last ? '0 14px 28px -14px #10B981' : '0 14px 28px -16px #6366F1', animation: last ? 'live-pulse 1.8s infinite' : 'none' }}>
                     <s.icon size={18} />
                   </span>
                   <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--text-sub, #64748b)', whiteSpace: 'nowrap' }}>{s.label}</span>
                 </div>
                 {i < PIPELINE.length - 1 && (
                   <span style={{ position: 'relative', flex: 1, minWidth: 24, height: 3, borderRadius: 999, background: 'var(--border, #e2e8f0)', overflow: 'hidden' }}>
-                    <span style={{ position: 'absolute', top: 0, bottom: 0, width: '40%', borderRadius: 999, background: 'linear-gradient(90deg,#6366F1,#8B5CF6)', animation: 'journey-flow 2.6s linear infinite' }} />
+                    <span style={{ position: 'absolute', top: 0, bottom: 0, width: '40%', borderRadius: 999, background: 'var(--primary)', animation: 'journey-flow 2.6s linear infinite' }} />
                   </span>
                 )}
               </Fragment>
@@ -199,8 +199,8 @@ export default function TPCDashboard() {
         <div style={{ ...cardStyle }}><ErrorState message={overview.error.message} onRetry={() => overview.refetch()} /></div>
       ) : (
         <>
-          <GlassPanel gradient="linear-gradient(90deg, #10B981, #06B6D4)" className="mb-3" style={{ ...cardStyle }}>
-            <SectionHeader icon={TrendingUp} title="Placement Health" subtitle="Overall placement rate with headline compensation metrics" tone="#10B981" />
+          <GlassPanel gradient="linear-gradient(90deg, #16A34A, #15803D)" className="mb-3" style={{ ...cardStyle }}>
+            <SectionHeader icon={TrendingUp} title="Placement Health" subtitle="Overall placement rate with headline compensation metrics" tone="success" />
             <PlacementGauge value={o.placementRate ?? 0} loading={overview.loading} sub={overview.loading ? '' : insight} avg={o.averagePackage} median={o.medianPackage} highest={o.highestPackage} />
           </GlassPanel>
 
@@ -233,8 +233,8 @@ export default function TPCDashboard() {
                 <BarChart data={(branchWise.data?.data || []).map((b) => ({ name: b._id, placements: b.count }))}>
                   <defs>
                     <linearGradient id="branchGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#8B5CF6" />
-                      <stop offset="100%" stopColor="#6366F1" />
+                      <stop offset="0%" stopColor="#6366F1" />
+                      <stop offset="100%" stopColor="#4338CA" />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke={grid} vertical={false} />
@@ -300,7 +300,7 @@ export default function TPCDashboard() {
                   <defs>
                     <linearGradient id="compGrad" x1="0" y1="0" x2="1" y2="0">
                       <stop offset="0%" stopColor="#6366F1" />
-                      <stop offset="100%" stopColor="#06B6D4" />
+                      <stop offset="100%" stopColor="#4338CA" />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke={grid} horizontal={false} />
@@ -322,7 +322,7 @@ export default function TPCDashboard() {
           </div>
         </GlassPanel>
 
-        <GlassPanel gradient="linear-gradient(90deg, #6366F1, #8B5CF6)" style={{ ...cardStyle }}>
+        <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" style={{ ...cardStyle }}>
           <div className="flex-between">
             <div>
               <div className="card-title">{isAdmin ? 'Recent Activity' : 'Latest Applications'}</div>

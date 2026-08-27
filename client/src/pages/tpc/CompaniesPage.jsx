@@ -93,12 +93,20 @@ export default function CompaniesPage() {
     const e = {};
     const name = (form.name || '').trim();
     const website = (form.website || '').trim();
+    const location = (form.location || '').trim();
+    const contactPerson = (form.contactPerson || '').trim();
     const contactEmail = (form.contactEmail || '').trim();
+    const contactPhone = (form.contactPhone || '').trim();
 
     if (!name) e.name = 'Company name is required';
     else if (name.length < 2) e.name = 'Use at least 2 characters';
+    if (!location) e.location = 'Location is required';
+    if (!contactPerson) e.contactPerson = 'Contact person is required';
+    if (!contactEmail) e.contactEmail = 'Contact email is required';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) e.contactEmail = 'Enter a valid contact email';
+    if (!contactPhone) e.contactPhone = 'Contact phone is required';
+    else if (!/^\+?[\d\s\-()]{7,15}$/.test(contactPhone)) e.contactPhone = 'Enter a valid phone number';
     if (website && !/^https?:\/\/.+\..+/.test(website)) e.website = 'Enter a valid URL (https://…)';
-    if (contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) e.contactEmail = 'Enter a valid contact email';
 
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -145,10 +153,10 @@ export default function CompaniesPage() {
   };
 
   const kpis = [
-    { key: 'total', label: 'Total Companies', value: c.total || 0, icon: Building2, tone: '#0EA5E9' },
-    { key: 'active', label: 'Active', value: c.active || 0, icon: TrendingUp, tone: '#10B981' },
-    { key: 'web', label: 'With Website', value: c.withWebsite || 0, icon: Globe, tone: '#8B5CF6' },
-    { key: 'ind', label: 'Industries', value: c.industries || 0, icon: Layers, tone: '#F59E0B' },
+    { key: 'total', label: 'Total Companies', value: c.total || 0, icon: Building2, tone: 'primary' },
+    { key: 'active', label: 'Active', value: c.active || 0, icon: TrendingUp, tone: 'success' },
+    { key: 'web', label: 'With Website', value: c.withWebsite || 0, icon: Globe, tone: 'primary' },
+    { key: 'ind', label: 'Industries', value: c.industries || 0, icon: Layers, tone: 'primary' },
   ];
 
   return (
@@ -167,7 +175,7 @@ export default function CompaniesPage() {
         }
         aside={
           <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
-            <Ring value={activePct} size={118} stroke={13} color="#10B981" track="rgba(255,255,255,0.25)" textColor="#fff" big />
+            <Ring value={activePct} size={118} stroke={13} color="var(--success)" track="rgba(255,255,255,0.25)" textColor="#fff" big />
             <div style={{ maxWidth: 170 }}>
               <div style={{ fontSize: 13, opacity: 0.9, fontWeight: 700 }}>Active</div>
               <div style={{ fontSize: 13, opacity: 0.85, marginTop: 4, lineHeight: 1.45 }}>Share of partners currently marked active for engagements.</div>
@@ -215,9 +223,9 @@ export default function CompaniesPage() {
               <div key={co._id} style={{ ...cardStyle, position: 'relative', overflow: 'hidden', transition: 'transform .2s ease, box-shadow .2s ease' }}
                 onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 22px 45px -25px rgba(14,165,233,0.6)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = cardStyle.boxShadow; }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, #0EA5E9, #6366F1)' }} />
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, #6366F1, #4338CA)' }} />
                 <div style={{ display: 'flex', gap: 13, marginTop: 4 }}>
-                  <div className="avatar" style={{ width: 44, height: 44, borderRadius: 12, fontSize: 15, background: 'linear-gradient(135deg,#0EA5E9,#6366F1)' }}>
+                  <div className="avatar" style={{ width: 44, height: 44, borderRadius: 12, fontSize: 15, background: 'linear-gradient(135deg,#6366F1,#4338CA)' }}>
                     {(co.name || '?').slice(0, 1)}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -275,16 +283,27 @@ export default function CompaniesPage() {
                 onChange={(e) => setForm({ ...form, website: e.target.value })} placeholder="https://company.com" />
               {errors.website && <span className="small" style={{ color: 'var(--danger-text)' }}>{errors.website}</span>}
             </div>
-            <div className="field"><label htmlFor="c-loc">Location</label>
-              <input id="c-loc" className="input" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="e.g. Bengaluru" /></div>
-            <div className="field"><label htmlFor="c-cp">Contact person</label>
-              <input id="c-cp" className="input" value={form.contactPerson} onChange={(e) => setForm({ ...form, contactPerson: e.target.value })} placeholder="e.g. Anita Rao (Campus HR)" /></div>
-            <div className="field"><label htmlFor="c-ce">Contact email</label>
-              <input id="c-ce" type="email" className="input" value={form.contactEmail} aria-invalid={!!errors.contactEmail}
+            <div className="field"><label htmlFor="c-loc">Location *</label>
+              <input id="c-loc" className="input" required value={form.location} aria-invalid={!!errors.location}
+                onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="e.g. Bengaluru" />
+              {errors.location && <span className="small" style={{ color: 'var(--danger-text)' }}>{errors.location}</span>}
+            </div>
+            <div className="field"><label htmlFor="c-cp">Contact person *</label>
+              <input id="c-cp" className="input" required value={form.contactPerson} aria-invalid={!!errors.contactPerson}
+                onChange={(e) => setForm({ ...form, contactPerson: e.target.value })} placeholder="e.g. Anita Rao (Campus HR)" />
+              {errors.contactPerson && <span className="small" style={{ color: 'var(--danger-text)' }}>{errors.contactPerson}</span>}
+            </div>
+            <div className="field"><label htmlFor="c-ce">Contact email *</label>
+              <input id="c-ce" type="email" className="input" required value={form.contactEmail} aria-invalid={!!errors.contactEmail}
                 onChange={(e) => setForm({ ...form, contactEmail: e.target.value })} placeholder="e.g. campus@company.com" />
               {errors.contactEmail && <span className="small" style={{ color: 'var(--danger-text)' }}>{errors.contactEmail}</span>}
             </div>
-            <div className="field" style={{ gridColumn: '1 / -1' }}><label htmlFor="c-desc">Description</label>
+            <div className="field"><label htmlFor="c-phone">Contact phone *</label>
+              <input id="c-phone" type="tel" className="input" required value={form.contactPhone} aria-invalid={!!errors.contactPhone}
+                onChange={(e) => setForm({ ...form, contactPhone: e.target.value })} placeholder="e.g. +91 98765 43210" />
+              {errors.contactPhone && <span className="small" style={{ color: 'var(--danger-text)' }}>{errors.contactPhone}</span>}
+            </div>
+            <div className="field" style={{ flexBasis: '100%' }}><label htmlFor="c-desc">Description</label>
               <textarea id="c-desc" className="input" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
                 placeholder="What does this company do? Hiring domains, profile, etc." /></div>
           </div>

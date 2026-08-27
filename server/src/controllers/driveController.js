@@ -107,6 +107,14 @@ exports.closeDrive = async (req, res, next) => {
   } catch (error) { next(error); }
 };
 
+exports.reopenDrive = async (req, res, next) => {
+  try {
+    const drive = await Drive.findByIdAndUpdate(req.params.id, { status: 'PUBLISHED', closedAt: null, publishedAt: new Date() }, { new: true });
+    if (!drive) throw new AppError('Drive not found', 404, 'NOT_FOUND');
+    sendSuccess(res, drive, 'Drive reopened');
+  } catch (error) { next(error); }
+};
+
 exports.deleteDrive = async (req, res, next) => {
   try {
     const drive = await Drive.findByIdAndDelete(req.params.id);

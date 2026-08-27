@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { GraduationCap, LogOut, X } from 'lucide-react';
+import { LogOut, X } from 'lucide-react';
+import BrandLogo from '../common/BrandLogo';
 import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard, Users, Building2, Megaphone, ClipboardList, Handshake,
@@ -80,7 +81,7 @@ export default function Sidebar({ open, onClose }) {
       <aside className={`sidebar ${open ? 'open' : ''}`} aria-label="Main navigation">
         <div className="sidebar-brand">
           <div className="brand-logo" style={isStudent ? { borderRadius: '50%' } : undefined}>
-            <GraduationCap size={21} />
+            <BrandLogo size={28} />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             {isStudent ? (

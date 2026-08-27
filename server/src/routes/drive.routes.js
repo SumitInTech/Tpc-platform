@@ -18,6 +18,7 @@ router.post('/', authorizeRole('TPC_OFFICER', 'ADMIN'), createDriveValidator, va
 router.put('/:id', authorizeRole('TPC_OFFICER', 'ADMIN'), driveController.updateDrive);
 router.post('/:id/publish', authorizeRole('TPC_OFFICER', 'ADMIN'), driveController.publishDrive);
 router.post('/:id/close', authorizeRole('TPC_OFFICER', 'ADMIN'), driveController.closeDrive);
+router.post('/:id/reopen', authorizeRole('TPC_OFFICER', 'ADMIN'), driveController.reopenDrive);
 router.delete('/:id', authorizeRole('ADMIN'), driveController.deleteDrive);
 
 router.get('/:id/eligibility', authorizeRole('STUDENT'), eligibilityController.getMyEligibility);

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Rocket, XCircle, Trash2, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { Rocket, XCircle, Trash2, ShieldCheck, ArrowLeft, PlayCircle } from 'lucide-react';
 import driveService from '../../services/driveService';
 import studentService from '../../services/studentService';
 import useApi from '../../hooks/useApi';
@@ -31,6 +31,8 @@ export default function DriveDetailPage() {
   const [evaluation, setEvaluation] = useState(null);
   const [actionLoading, setActionLoading] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [confirmClose, setConfirmClose] = useState(false);
+  const [confirmReopen, setConfirmReopen] = useState(false);
 
   const doAction = async (action) => {
     setActionLoading(action);
@@ -41,12 +43,17 @@ export default function DriveDetailPage() {
       } else if (action === 'close') {
         await driveService.closeDrive(id);
         toast.info('Drive closed', 'No new applications will be accepted.');
+      } else if (action === 'reopen') {
+        await driveService.reopenDrive(id);
+        toast.success('Drive reopened', 'Students can apply again.');
       } else if (action === 'delete') {
         await driveService.deleteDrive(id);
         toast.info('Drive deleted');
         navigate('/tpc/drives');
         return;
       }
+      setConfirmClose(false);
+      setConfirmReopen(false);
       refetch();
     } catch (err) {
       toast.error('Action failed', getApiError(err).message);
@@ -101,7 +108,7 @@ export default function DriveDetailPage() {
       </div>
 
       <Card className="mb-3">
-        <div className="form-grid" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(160px,1fr))' }}>
+        <div className="form-grid">
           <div><div className="kv-k small muted">Package</div><strong style={{ fontSize: 16, color: 'var(--success-text)' }}>{formatLPA(drive.package, drive.currency)}</strong></div>
           <div><div className="kv-k small muted">Location</div><strong>{drive.location || 'On campus'}</strong></div>
           <div><div className="kv-k small muted">Applications open</div><strong>{formatDate(drive.applicationStart)}</strong></div>
@@ -124,8 +131,13 @@ export default function DriveDetailPage() {
             </Button>
           )}
           {drive.status === 'PUBLISHED' && (
-            <Button variant="secondary" icon={XCircle} loading={actionLoading === 'close'} onClick={() => doAction('close')}>
+            <Button variant="secondary" icon={XCircle} loading={actionLoading === 'close'} onClick={() => setConfirmClose(true)}>
               Close Applications
+            </Button>
+          )}
+          {drive.status === 'CLOSED' && (
+            <Button icon={PlayCircle} loading={actionLoading === 'reopen'} onClick={() => setConfirmReopen(true)}>
+              Reopen Applications
             </Button>
           )}
           {isAdmin && (
@@ -185,6 +197,14 @@ export default function DriveDetailPage() {
           <EligibilityCard eligibility={evaluation.eligibility} policyCheck={evaluation.policyCheck} />
         )}
       </Card>
+
+      <ConfirmDialog open={confirmClose} onClose={() => setConfirmClose(false)} onConfirm={() => doAction('close')}
+        title="Close applications?" confirmLabel="Close" loading={actionLoading === 'close'}
+        message={`No new applications will be accepted for "${drive.title}". You can reopen it anytime.`} />
+
+      <ConfirmDialog open={confirmReopen} onClose={() => setConfirmReopen(false)} onConfirm={() => doAction('reopen')}
+        title="Reopen applications?" confirmLabel="Reopen" loading={actionLoading === 'reopen'} danger={false}
+        message={`Students will be able to apply to "${drive.title}" again.`} />
 
       <ConfirmDialog open={confirmDelete} onClose={() => setConfirmDelete(false)} onConfirm={() => doAction('delete')}
         title="Delete drive?" confirmLabel="Delete" loading={actionLoading === 'delete'}

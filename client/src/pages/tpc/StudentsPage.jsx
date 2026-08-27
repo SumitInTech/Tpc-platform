@@ -71,12 +71,12 @@ export default function StudentsPage() {
   const pagination = res?.pagination || {};
 
   const branchOptions = [
-    { value: '', label: 'All Branches', color: '#6366F1', count: all.length },
-    ...BRANCHES.map((b) => ({ value: b, label: b, color: '#06B6D4', count: all.filter((s) => (s.branch || s.department) === b).length, dot: true })),
+    { value: '', label: 'All Branches', color: 'primary', count: all.length },
+    ...BRANCHES.map((b) => ({ value: b, label: b, color: 'primary', count: all.filter((s) => (s.branch || s.department) === b).length, dot: true })),
   ];
   const statusOptions = [
-    { value: '', label: 'All', color: '#6366F1', count: all.length },
-    ...STUDENT_PLACEMENT_STATUS.map((st) => ({ value: st, label: labelize(st), color: st === 'PLACED' ? '#10B981' : '#F59E0B', count: all.filter((s) => s.placementStatus === st).length, dot: true })),
+    { value: '', label: 'All', color: 'primary', count: all.length },
+    ...STUDENT_PLACEMENT_STATUS.map((st) => ({ value: st, label: labelize(st), color: st === 'PLACED' ? 'success' : st === 'NOT_ELIGIBLE' ? 'danger' : 'primary', count: all.filter((s) => s.placementStatus === st).length, dot: true })),
   ];
 
   const openCreate = () => {
@@ -225,10 +225,10 @@ export default function StudentsPage() {
   };
 
   const kpis = [
-    { key: 'total', label: 'Students', value: total, icon: Users, tone: '#6366F1' },
-    { key: 'placed', label: 'Placed', value: placed, icon: UserCheck, tone: '#10B981' },
-    { key: 'cgpa', label: 'Avg CGPA', value: Number(avgCgpa.toFixed(2)), icon: GraduationCap, tone: '#06B6D4', format: (v) => Number(v).toFixed(2) },
-    { key: 'hs', label: 'Higher Studies', value: higherStudies, icon: Target, tone: '#F59E0B' },
+    { key: 'total', label: 'Students', value: total, icon: Users, tone: 'primary' },
+    { key: 'placed', label: 'Placed', value: placed, icon: UserCheck, tone: 'success' },
+    { key: 'cgpa', label: 'Avg CGPA', value: Number(avgCgpa.toFixed(2)), icon: GraduationCap, tone: 'primary', format: (v) => Number(v).toFixed(2) },
+    { key: 'hs', label: 'Higher Studies', value: higherStudies, icon: Target, tone: 'primary' },
   ];
 
   return (
@@ -260,12 +260,12 @@ export default function StudentsPage() {
         )}
       </div>
 
-      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #06B6D4)" className="mb-3 mt-3" style={cardStyle}>
+      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3 mt-3" style={cardStyle}>
         <SectionHeader
           icon={Filter}
           title="Find students"
           subtitle="Search by name or filter by branch and placement status."
-          tone="#6366F1"
+          tone="primary"
           action={search || branch || status ? (
             <button type="button" className="btn btn-sm btn-ghost" onClick={() => { setSearchInput(''); setBranch(''); setStatus(''); setPage(1); }}>Clear</button>
           ) : null}
@@ -292,7 +292,7 @@ export default function StudentsPage() {
                 <div key={x.b} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <span style={{ width: 42, fontSize: 12, fontWeight: 700, color: 'var(--text-sub)' }}>{x.b}</span>
                   <div style={{ flex: 1, height: 8, background: 'var(--surface-2, #eef2f7)', borderRadius: 999, overflow: 'hidden' }}>
-                    <div style={{ width: `${(x.n / maxBranch) * 100}%`, height: '100%', background: 'linear-gradient(90deg, #6366F1, #06B6D4)', borderRadius: 999, transition: 'width .8s cubic-bezier(.2,.7,.3,1)' }} />
+                    <div style={{ width: `${(x.n / maxBranch) * 100}%`, height: '100%', background: 'linear-gradient(90deg, #6366F1, #4338CA)', borderRadius: 999, transition: 'width .8s cubic-bezier(.2,.7,.3,1)' }} />
                   </div>
                   <span style={{ width: 28, textAlign: 'right', fontSize: 12, fontWeight: 700 }}>{x.n}</span>
                 </div>
@@ -435,7 +435,7 @@ export default function StudentsPage() {
               </select>
               <span className="small" style={{ color: 'var(--text-sub)' }}>Feeds the NIRF Graduation Outcomes report.</span>
             </div>
-            <div className="field" style={{ gridColumn: '1 / -1' }}>
+            <div className="field" style={{ flexBasis: '100%' }}>
               <label htmlFor="f-skills">Tech Stack</label>
               <div className="chip-list">
                 {(form.skills || []).map((sk) => (
