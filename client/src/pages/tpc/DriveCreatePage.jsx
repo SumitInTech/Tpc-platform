@@ -211,22 +211,24 @@ export default function DriveCreatePage() {
         <ArrowLeft size={14} /> Back to Drives
       </button>
 
-      <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 20, padding: '24px 26px', color: '#fff', background: 'linear-gradient(120deg, #4338ca, #6366f1 50%, #818cf8)', boxShadow: '0 24px 55px -28px rgba(79,70,229,0.8)' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 15% 20%, rgba(255,255,255,0.28), transparent 42%), radial-gradient(circle at 85% 0%, rgba(255,255,255,0.18), transparent 38%)' }} />
+      {/* Hero banner — flat sky-blue, no violet/radial gradient */}
+      <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 16, padding: '22px 24px', color: '#fff', background: 'var(--primary)' }}>
+        {/* Dot-grid texture — consistent with Login and other heroes */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px)', backgroundSize: '22px 22px', pointerEvents: 'none' }} />
         <div style={{ position: 'relative' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: 0.9 }}>
-            <Rocket size={18} />
-            <span style={{ letterSpacing: 1, fontSize: 12, textTransform: 'uppercase', fontWeight: 700 }}>New Placement Drive</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: 0.88 }}>
+            <Rocket size={16} />
+            <span style={{ letterSpacing: 1, fontSize: 11.5, textTransform: 'uppercase', fontWeight: 700 }}>New Placement Drive</span>
           </div>
-          <h1 style={{ margin: '8px 0 14px', fontSize: 28, fontWeight: 800 }}>Create Drive</h1>
+          <h1 style={{ margin: '6px 0 14px', fontSize: 26, fontWeight: 800 }}>Create Drive</h1>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            {STEPS.map((st, i) => {
+            {STEPS.map((st) => {
               const Icon = st.icon;
               const done = stepState[st.key];
               return (
-                <div key={st.key} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.14)', padding: '8px 14px', borderRadius: 999, fontSize: 13, fontWeight: 700, backdropFilter: 'blur(4px)' }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 22, height: 22, borderRadius: 999, background: done ? 'var(--success)' : 'rgba(255,255,255,0.25)' }}>
-                    {done ? <Check size={13} /> : <Icon size={13} />}
+                <div key={st.key} style={{ display: 'flex', alignItems: 'center', gap: 7, background: 'rgba(255,255,255,0.15)', padding: '7px 13px', borderRadius: 999, fontSize: 12.5, fontWeight: 700, border: '1px solid rgba(255,255,255,0.25)' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20, borderRadius: 999, background: done ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)', color: done ? 'var(--primary)' : '#fff' }}>
+                    {done ? <Check size={12} /> : <Icon size={12} />}
                   </span>
                   {st.label}
                 </div>
@@ -240,8 +242,10 @@ export default function DriveCreatePage() {
         <Sparkles size={13} color="var(--primary)" /> {completedSteps} of {STEPS.length} sections ready — the eligibility engine evaluates these rules for every student.
       </div>
 
-      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3 mt-3" style={cardStyle}>
+      {/* ── Drive Details ── */}
+      <GlassPanel className="mb-3 mt-3" style={cardStyle}>
         <div className="card-title">Drive Details</div>
+        {/* Main grid — 2 cols. Date row at bottom is one row. Description always full-width last. */}
         <div className="form-grid mt-2">
           <div className="field">
             <label htmlFor="d-company">Company *</label>
@@ -280,26 +284,34 @@ export default function DriveCreatePage() {
             <input id="d-loc" className="input" placeholder="e.g. Hyderabad / Hybrid"
               value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
           </div>
-          <div className="field">
-            <label htmlFor="d-start">Applications open</label>
-            <input id="d-start" type="date" className="input" value={form.applicationStart}
-              onChange={(e) => setForm({ ...form, applicationStart: e.target.value })} />
+
+          {/* ── Date row: all three dates on one line, then description fills rest ── */}
+          <div className="field" style={{ flexBasis: '100%' }}>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <div style={{ flex: '1 1 160px', minWidth: 140 }}>
+                <label htmlFor="d-start">Applications open</label>
+                <input id="d-start" type="date" className="input" value={form.applicationStart}
+                  onChange={(e) => setForm({ ...form, applicationStart: e.target.value })} />
+              </div>
+              <div style={{ flex: '1 1 160px', minWidth: 140 }}>
+                <label htmlFor="d-deadline">Application deadline *</label>
+                <input id="d-deadline" type="date" className="input" value={form.applicationDeadline}
+                  onChange={(e) => setForm({ ...form, applicationDeadline: e.target.value })} aria-invalid={!!errors.applicationDeadline} />
+                {errors.applicationDeadline && <span className="small" style={{ color: 'var(--danger-text)' }}>{errors.applicationDeadline}</span>}
+              </div>
+              <div style={{ flex: '1 1 160px', minWidth: 140 }}>
+                <label htmlFor="d-date">Interview / drive date</label>
+                <input id="d-date" type="date" className="input" value={form.driveDate} aria-invalid={!!errors.driveDate}
+                  onChange={(e) => setForm({ ...form, driveDate: e.target.value })} />
+                {errors.driveDate && <span className="small" style={{ color: 'var(--danger-text)' }}>{errors.driveDate}</span>}
+              </div>
+            </div>
           </div>
-          <div className="field">
-            <label htmlFor="d-deadline">Application deadline *</label>
-            <input id="d-deadline" type="date" className="input" value={form.applicationDeadline}
-              onChange={(e) => setForm({ ...form, applicationDeadline: e.target.value })} aria-invalid={!!errors.applicationDeadline} />
-            {errors.applicationDeadline && <span className="small" style={{ color: 'var(--danger-text)' }}>{errors.applicationDeadline}</span>}
-          </div>
-          <div className="field">
-            <label htmlFor="d-date">Interview / drive date</label>
-            <input id="d-date" type="date" className="input" value={form.driveDate} aria-invalid={!!errors.driveDate}
-              onChange={(e) => setForm({ ...form, driveDate: e.target.value })} />
-            {errors.driveDate && <span className="small" style={{ color: 'var(--danger-text)' }}>{errors.driveDate}</span>}
-          </div>
+
+          {/* Description — full width, below dates */}
           <div className="field" style={{ flexBasis: '100%' }}>
             <label htmlFor="d-desc">Description</label>
-            <textarea id="d-desc" className="input" placeholder="About the role, selection process…"
+            <textarea id="d-desc" className="input" rows={4} placeholder="About the role, selection process…"
               value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           </div>
         </div>
@@ -344,7 +356,7 @@ export default function DriveCreatePage() {
         </div>
       </GlassPanel>
 
-      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3" style={cardStyle}>
+      <GlassPanel className="mb-3" style={cardStyle}>
         <div className="flex-between">
           <div>
             <div className="card-title">Eligibility Rules</div>

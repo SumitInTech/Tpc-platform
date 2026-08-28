@@ -105,22 +105,38 @@ export default function StudentApplicationsPage() {
         compact
       />
 
-      <div className="mt-3">
-        {appsRes.loading ? (
-          <KpiGrid>{stages.slice(0, 4).map((s) => <Skeleton key={s} variant="card" />)}</KpiGrid>
-        ) : (
-          <KpiGrid>
-            {stages.map((s) => (
-              <Kpi key={s} label={labelize(s)} value={counts[s]} icon={ListChecks} tone="info" />
-            ))}
-            <Kpi label="Selected" value={selectedCount} icon={CheckCircle2} tone="success" />
-          </KpiGrid>
-        )}
+      {/* ── Status stats — flat flex row, equal fixed-width boxes ── */}
+      <div className="mt-3" style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+        {appsRes.loading
+          ? stages.slice(0, 4).map((s) => (
+              <div key={s} style={{ flex: '1 1 120px', height: 72, borderRadius: 'var(--radius)', background: 'var(--surface-2)', border: '1px solid var(--border)' }} className="skeleton" />
+            ))
+          : stages.map((s) => {
+              const cnt = counts[s];
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setFilter(filter === s ? '' : s)}
+                  style={{
+                    flex: '1 1 120px', minWidth: 110, maxWidth: 180,
+                    padding: '12px 14px', borderRadius: 'var(--radius)',
+                    border: `1.5px solid ${filter === s ? 'var(--primary)' : 'var(--border)'}`,
+                    background: filter === s ? 'var(--primary-soft)' : 'var(--surface)',
+                    textAlign: 'left', cursor: 'pointer',
+                    transition: 'border-color 150ms, background 150ms',
+                  }}
+                >
+                  <div style={{ fontSize: 22, fontWeight: 800, color: filter === s ? 'var(--primary-dark)' : 'var(--text)', lineHeight: 1 }}>{cnt}</div>
+                  <div style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--text-muted)', marginTop: 3 }}>{labelize(s)}</div>
+                </button>
+              );
+            })}
       </div>
 
       {!appsRes.loading && !appsRes.error && (
-        <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3 mt-3" style={{ ...cardStyle, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-          <Filter size={16} color="var(--text-sub, #64748b)" />
+        <GlassPanel className="mb-3 mt-3" style={{ ...cardStyle, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+          <Filter size={16} color="var(--text-muted)" />
           <span style={{ fontWeight: 600, fontSize: 13 }}>Stage</span>
           <Segmented options={segOptions} value={filter} onChange={setFilter} />
           <div className="search-box" style={{ flex: 1, minWidth: 200 }}>
@@ -132,7 +148,7 @@ export default function StudentApplicationsPage() {
 
       {appsRes.loading ? (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
-          {[1, 2, 3].map((i) => <Skeleton key={i} variant="card" />)}
+          {[1, 2, 3].map((i) => <div key={i} style={{ height: 160, borderRadius: 'var(--radius)', background: 'var(--surface-2)' }} className="skeleton" />)}
         </div>
       ) : appsRes.error ? (
         <div style={{ ...cardStyle }}><ErrorState message={appsRes.error.message} onRetry={() => appsRes.refetch()} /></div>
@@ -148,9 +164,13 @@ export default function StudentApplicationsPage() {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
           {filtered.map((a) => (
-            <div key={a._id} onClick={() => setOpenId(a._id)} onMouseEnter={lift} onMouseLeave={rest}
-              style={{ ...cardStyle, position: 'relative', cursor: 'pointer', overflow: 'hidden', transition: 'transform .2s ease, box-shadow .2s ease' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, #6366F1, #4338CA)' }} />
+            <div key={a._id} onClick={() => setOpenId(a._id)}
+              style={{ ...cardStyle, position: 'relative', cursor: 'pointer', overflow: 'hidden', transition: 'transform .2s ease, box-shadow .2s ease, border-color .2s ease' }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--primary) 30%, var(--border))'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = cardStyle.boxShadow; e.currentTarget.style.borderColor = cardStyle.border?.replace('1px solid ', ''); }}
+            >
+              {/* 3px sky-blue top accent — no gradient */}
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'var(--primary)', borderRadius: 'var(--radius) var(--radius) 0 0' }} />
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
                 <span className="badge" style={{ background: 'var(--primary-soft)', color: 'var(--primary-soft-text)', fontWeight: 700 }}>
                   {a.driveId?.companyId?.name || 'Company'}
@@ -163,7 +183,7 @@ export default function StudentApplicationsPage() {
               {a.highlightedSkills?.length > 0 && (
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 10 }}>
                   {a.highlightedSkills.slice(0, 5).map((s) => (
-                    <span key={s} className="badge" style={{ background: 'var(--surface-2)', color: 'var(--text-sub)' }}>{s}</span>
+                    <span key={s} className="badge" style={{ background: 'var(--surface-2)', color: 'var(--text-muted)' }}>{s}</span>
                   ))}
                 </div>
               )}
@@ -173,7 +193,7 @@ export default function StudentApplicationsPage() {
                 <span className="small muted" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                   <CalendarDays size={13} /> Applied {timeAgo(a.appliedAt)}
                 </span>
-                <span className="link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12.5, color: 'var(--primary)', fontWeight: 650 }}>
                   View <ArrowUpRight size={14} />
                 </span>
               </div>
@@ -198,14 +218,14 @@ export default function StudentApplicationsPage() {
             <span>Applied {formatDate(open.appliedAt)}</span>
           </div>
 
-          <GlassPanel gradient="linear-gradient(90deg,#6366F1,#4338CA)" className="mb-3" style={{ ...cardStyle }}>
+          <GlassPanel className="mb-3" style={{ ...cardStyle }}>
             <SectionHeader title="Status Timeline" icon={Send} subtitle="How your application is progressing" />
             <MyTimeline history={open.statusHistory} />
           </GlassPanel>
 
           {open.eligibilitySnapshot && (
-            <GlassPanel gradient="linear-gradient(90deg,#16A34A,#15803D)" className="mb-3" style={{ ...cardStyle }}>
-              <SectionHeader title="Eligibility At Apply" icon={Sparkles} subtitle="Rules evaluated when you submitted" />
+            <GlassPanel className="mb-3" style={{ ...cardStyle }}>
+              <SectionHeader title="Eligibility At Apply" icon={Sparkles} subtitle="Rules evaluated when you submitted" tone="success" />
               <EligibilitySnapshotView result={open.eligibilitySnapshot} />
             </GlassPanel>
           )}

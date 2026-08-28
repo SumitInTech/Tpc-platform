@@ -3,6 +3,7 @@ import { UploadCloud, FileText, Sparkles, Eye, X, Wand2, Tags } from 'lucide-rea
 import Modal from '../common/Modal';
 import Button from '../common/Button';
 import ResumeViewerModal from '../common/ResumeViewerModal';
+import studentService from '../../services/studentService';
 
 const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -17,8 +18,8 @@ function buildResumeHtml(student = {}, drive = {}) {
   return `<!doctype html><html><head><meta charset="utf-8"><style>
     *{box-sizing:border-box} body{font-family:Segoe UI,Roboto,Arial,sans-serif;color:#0f172a;padding:34px;max-width:720px;margin:auto}
     h1{margin:0;font-size:26px}.sub{color:#64748b;margin:4px 0 14px}
-    .badge{display:inline-block;background:#eef2ff;color:#4338ca;padding:6px 12px;border-radius:999px;font-weight:700;font-size:13px}
-    .sec{margin-top:18px;font-weight:700;border-left:3px solid #6366f1;padding-left:8px}
+    .badge{display:inline-block;background:#e0f2fe;color:#0284c7;padding:6px 12px;border-radius:999px;font-weight:700;font-size:13px}
+    .sec{margin-top:18px;font-weight:700;border-left:3px solid #0ea5e9;padding-left:8px}
     .sk{display:inline-block;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:4px 10px;margin:4px 4px 0 0;font-size:13px}
     .fit{margin-top:12px;color:#0f172a;font-style:italic}.foot{margin-top:24px;color:#94a3b8;font-size:12px}
   </style></head><body>
@@ -28,7 +29,7 @@ function buildResumeHtml(student = {}, drive = {}) {
     <div class="sec">Profile</div>
     <div>Branch: ${escapeHtml(s.branch || '—')} &nbsp; CGPA: ${s.cgpa != null ? Number(s.cgpa).toFixed(2) : '—'} &nbsp; Class of ${s.graduationYear ?? '—'}</div>
     <div class="sec">Skills</div><div>${skills || '—'}</div>
-    <div class="fit">“Strong in ${escapeHtml(top)} — aligned with the ${escapeHtml(role)} role at ${escapeHtml(company)}.”</div>
+    <div class="fit">"Strong in ${escapeHtml(top)} — aligned with the ${escapeHtml(role)} role at ${escapeHtml(company)}."</div>
     <div class="foot">Auto-generated from your TNP profile. Tune it by uploading a role-specific PDF.</div>
   </body></html>`;
 }
@@ -47,6 +48,8 @@ export default function ResumeApplyModal({ open, onClose, drive, student, onSubm
   const company = drive?.companyId?.name || 'Company';
   const role = drive?.jobRole || 'Role';
   const topSkill = (student?.skills || [])[0];
+  // Live view of the student's stack — profile skills + any newly added skills (visible instantly)
+  const allSkills = [...new Set([...(student?.skills || []), ...added])];
 
   useEffect(() => {
     if (open) {
@@ -93,6 +96,11 @@ export default function ResumeApplyModal({ open, onClose, drive, student, onSubm
     if (!activeResume) return;
     setBusy(true);
     try {
+      // If new skills were added, persist them to the student's profile tech stack first
+      if (added.length > 0) {
+        const merged = [...new Set([...(student?.skills || []), ...added])];
+        try { await studentService.updateMyProfile({ skills: merged }); } catch (_) { /* non-blocking */ }
+      }
       await onSubmitted({
         resume: activeResume,
         resumeName: activeName,
@@ -127,7 +135,7 @@ export default function ResumeApplyModal({ open, onClose, drive, student, onSubm
             <div className="ra-line">Branch <b>{student?.branch || '—'}</b> · CGPA <b>{student?.cgpa != null ? Number(student.cgpa).toFixed(2) : '—'}</b> · Class of <b>{student?.graduationYear ?? '—'}</b></div>
             <div className="ra-sec">Skills</div>
             <div className="ra-chips">
-              {(student?.skills || []).length ? student.skills.map((k) => <span key={k} className="ra-chip">{k}</span>)
+              {allSkills.length ? allSkills.map((k) => <span key={k} className="ra-chip">{k}</span>)
                 : <span className="ra-chip">—</span>}
             </div>
             <div className="ra-fit">“Strong in {topSkill || 'core engineering'} — aligned with the {role} role at {company}.”</div>
@@ -137,8 +145,8 @@ export default function ResumeApplyModal({ open, onClose, drive, student, onSubm
           <div className="ra-right">
             <div className="ra-sec"><Tags size={14} /> Highlight skills for this role</div>
             <div className="ra-chips">
-              {(student?.skills || []).length === 0 && <span className="ra-chip">No skills on profile yet — add below.</span>}
-              {(student?.skills || []).map((k) => (
+              {allSkills.length === 0 && <span className="ra-chip">No skills on profile yet — add below.</span>}
+              {allSkills.map((k) => (
                 <button
                   key={k} type="button"
                   className="ra-chip"

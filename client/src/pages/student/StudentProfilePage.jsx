@@ -181,7 +181,7 @@ export default function StudentProfilePage() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginTop: 16, alignItems: 'start' }}>
-        <GlassPanel gradient="linear-gradient(90deg,#6366F1,#4338CA)" style={{ ...cardStyle }}>
+        <GlassPanel style={{ ...cardStyle }}>
           <SectionHeader title="Academic Record" icon={GraduationCap} />
           <div style={{ display: 'grid', gap: 10, marginTop: 6 }}>
             <Row icon={Hash} label="Student ID" value={profile?.studentId || '—'} />
@@ -194,8 +194,8 @@ export default function StudentProfilePage() {
           </div>
         </GlassPanel>
 
-        <GlassPanel gradient="linear-gradient(90deg,#16A34A,#15803D)" style={{ ...cardStyle }}>
-          <SectionHeader title="Placement Snapshot" icon={BadgeCheck} />
+        <GlassPanel style={{ ...cardStyle }}>
+          <SectionHeader title="Placement Snapshot" icon={BadgeCheck} tone="success" />
           {profile?.careerOutcome?.company ? (
             <div style={{ marginTop: 6 }}>
               <div style={{ fontWeight: 800, fontSize: 18 }}>{profile.careerOutcome.company}</div>
@@ -217,7 +217,7 @@ export default function StudentProfilePage() {
         </GlassPanel>
       </div>
 
-      <GlassPanel gradient="linear-gradient(90deg,#6366F1,#4338CA)" className="mt-3" style={{ ...cardStyle }}>
+      <GlassPanel className="mt-3" style={{ ...cardStyle }}>
         <SectionHeader title="Tech Stack" icon={Sparkles} subtitle="Yours to edit — highlighted when you apply to a drive" />
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '12px 0' }}>
           {skills.length === 0 && <span className="small muted">No skills added yet.</span>}

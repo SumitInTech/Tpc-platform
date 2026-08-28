@@ -217,28 +217,35 @@ export default function CompaniesPage() {
           description="Add your first recruiting partner to start creating drives."
           actions={<Button icon={Plus} onClick={openCreate}>Add Company</Button>} /></Card>
       ) : (
-        <>
-          <div className="grid-cards" style={{ marginTop: 18 }}>
+      <>
+          {/* Equal-width cards using a fixed column grid — no auto-fit size disparity */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16, marginTop: 18 }}>
             {companies.map((co) => (
-              <div key={co._id} style={{ ...cardStyle, position: 'relative', overflow: 'hidden', transition: 'transform .2s ease, box-shadow .2s ease' }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 22px 45px -25px rgba(14,165,233,0.6)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = cardStyle.boxShadow; }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, #6366F1, #4338CA)' }} />
-                <div style={{ display: 'flex', gap: 13, marginTop: 4 }}>
-                  <div className="avatar" style={{ width: 44, height: 44, borderRadius: 12, fontSize: 15, background: 'linear-gradient(135deg,#6366F1,#4338CA)' }}>
+              <div key={co._id}
+                style={{ ...cardStyle, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', transition: 'transform .2s, box-shadow .2s, border-color .2s' }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--primary) 30%, var(--border))'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = cardStyle.boxShadow; e.currentTarget.style.borderColor = ''; }}>
+                {/* 3px sky-blue accent top — flat, no gradient */}
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'var(--primary)' }} />
+                <div style={{ display: 'flex', gap: 12, marginTop: 4, flex: 1 }}>
+                  {/* Avatar — flat primary bg */}
+                  <div className="avatar" style={{ width: 42, height: 42, borderRadius: 12, fontSize: 15, flexShrink: 0, background: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
                     {(co.name || '?').slice(0, 1)}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div className="flex-between">
-                      <div className="card-title">{co.name}</div>
-                      <span className="badge" style={{ background: 'var(--surface-2)', color: 'var(--text-muted)' }}>{co.industry || '—'}</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 6 }}>
+                      <div className="card-title" style={{ fontSize: 14.5, lineHeight: 1.3 }}>{co.name}</div>
+                      <span className="badge" style={{ background: 'var(--surface-2)', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{co.industry || '—'}</span>
                     </div>
                     <div className="small muted mt-1">
                       {co.location && <>📍 {co.location}</>}
                       {co.contactPerson && <>{co.location ? ' · ' : ''}👤 {co.contactPerson}</>}
                     </div>
-                    <div className="small muted mt-1" style={{ minHeight: 34 }}>{co.description ? (co.description.length > 90 ? `${co.description.slice(0, 90)}…` : co.description) : ''}</div>
-                    <div className="mt-2" style={{ display: 'flex', gap: 8 }}>
+                    {/* Fixed-height description slot so all cards align */}
+                    <div className="small muted mt-1" style={{ height: 34, overflow: 'hidden', lineHeight: 1.5 }}>
+                      {co.description ? (co.description.length > 85 ? `${co.description.slice(0, 85)}…` : co.description) : ''}
+                    </div>
+                    <div className="mt-2" style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                       <Button size="sm" variant="secondary" icon={Pencil} onClick={() => openEdit(co)}>Edit</Button>
                       {co.website && (
                         <a className="btn btn-sm btn-ghost" href={co.website} target="_blank" rel="noreferrer" style={{ gap: 5 }}>

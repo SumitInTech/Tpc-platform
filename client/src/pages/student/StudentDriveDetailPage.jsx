@@ -217,6 +217,7 @@ export default function StudentDriveDetailPage() {
   const { id: driveId } = useParams();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
+  const [checkingElig, setCheckingElig] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
   const driveRes = useApi(() => driveService.getDrive(driveId), [driveId]);
@@ -253,6 +254,26 @@ export default function StudentDriveDetailPage() {
       eligRes.refetch();
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  // Apply gates on a fresh eligibility check: pass → open the apply modal, fail → keep it locked.
+  async function handleApply() {
+    setCheckingElig(true);
+    try {
+      const res = await driveService.getMyEligibility(driveId);
+      const elig = res?.data;
+      if (elig?.eligibility) {
+        eligRes.setData(res);
+        if (elig.policyCheck?.allowed === false || !elig.eligibility.eligible) {
+          return; // not eligible — do not open the apply page
+        }
+      }
+      setModalOpen(true);
+    } catch {
+      eligRes.refetch();
+    } finally {
+      setCheckingElig(false);
     }
   }
 
@@ -294,15 +315,12 @@ export default function StudentDriveDetailPage() {
 
   return (
     <div className="dd-detail" style={{ fontFamily: FONT }}>
-      <div className="dd-blob" style={{ width: 360, height: 360, background: '#6366F1', top: -120, right: -80 }} />
-      <div className="dd-blob" style={{ width: 300, height: 300, background: '#06B6D4', bottom: -120, left: -60 }} />
-
       <div style={{ position: 'relative', zIndex: 1 }}>
         <button
           onClick={() => navigate('/student/drives')}
-          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--surface-2, #eef2f7)'; e.currentTarget.style.borderColor = 'var(--primary, #6366F1)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'var(--border, #e2e8f0)'; }}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 10, border: '1px solid var(--border, #e2e8f0)', cursor: 'pointer', padding: '8px 14px', borderRadius: 999, fontWeight: 700, fontSize: 13, color: 'var(--text, #0f172a)', background: 'transparent', transition: 'background .15s ease, border-color .15s ease' }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--surface-2)'; e.currentTarget.style.borderColor = 'var(--primary)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 10, border: '1px solid var(--border)', cursor: 'pointer', padding: '8px 14px', borderRadius: 999, fontWeight: 700, fontSize: 13, color: 'var(--text)', background: 'transparent', transition: 'background .15s, border-color .15s' }}
         >
           <ArrowLeft size={16} /> All Drives
         </button>
@@ -313,35 +331,37 @@ export default function StudentDriveDetailPage() {
           subtitle={drive.jobRole}
           compact
           aside={
-            <div style={{ width: 64, height: 64, borderRadius: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.16)', fontWeight: 800, fontSize: 26, color: '#fff', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.28)' }}>
+            <div style={{ width: 60, height: 60, borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.18)', fontWeight: 800, fontSize: 24, color: '#fff', border: '1px solid rgba(255,255,255,0.3)' }}>
               {initial}
             </div>
           }
           actions={
             myApplication ? (
-              <button onClick={() => navigate('/student/applications')} className="btn-shimmer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: 'none', cursor: 'pointer', padding: '10px 16px', borderRadius: 12, fontWeight: 800, fontSize: 13, color: '#fff', background: 'rgba(255,255,255,0.18)' }}>
-                <CheckCircle2 size={15} /> Applied — View
+              <button onClick={() => navigate('/student/applications')} className="btn" style={{ background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.35)', padding: '9px 16px', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 7 }}>
+                <CheckCircle2 size={14} /> Applied — View
               </button>
             ) : closed ? (
-              <span className="badge" style={{ background: 'var(--surface-2)', color: 'var(--text-muted)', padding: '10px 16px' }}>Applications Closed</span>
+              <span className="badge" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', padding: '9px 14px', border: '1px solid rgba(255,255,255,0.3)' }}>Applications Closed</span>
             ) : null
           }
         />
       </div>
 
+      {/* Main content grid */}
       <div style={{ flex: 1, minHeight: 0, display: 'grid', gridTemplateColumns: 'minmax(0,1.55fr) minmax(320px, 0.95fr)', gap: 12, marginTop: 12, position: 'relative', zIndex: 1 }} className="dd-grid">
 
-        <div className="dd-scroll" style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingRight: 0 }}>
-          <GlassPanel gradient={phase === 'closed' ? 'linear-gradient(90deg,#64748B,#94A3B8)' : 'linear-gradient(90deg,#0EA5E9,#6366F1)'} style={{ ...cardStyle, padding: 22 }}>
+        {/* Left column — application window */}
+        <div className="dd-scroll" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <GlassPanel style={{ ...cardStyle, padding: 22 }}>
             <div className="lp-grid">
               <div className="lp-window">
-                <SectionHeader title="Application Window" icon={Clock} subtitle={closed ? 'Closed' : phase === 'ending' ? 'Closing soon — act fast' : 'Time remaining'} />
+                <SectionHeader title="Application Window" icon={Clock} subtitle={closed ? 'Closed' : phase === 'ending' ? 'Closing soon — act fast' : 'Time remaining'} tone={phase === 'closed' ? 'muted' : 'primary'} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginTop: 6 }}>
-                  <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center' }}>
-                    <Ring value={remainingPct} size={158} stroke={14} tone={ringTone} textColor="var(--text, #0f172a)" />
+                  <div style={{ flexShrink: 0 }}>
+                    <Ring value={remainingPct} size={148} stroke={13} color={ringTone} track="var(--border)" textColor="var(--text)" />
                   </div>
                   <div>
-                    <div style={{ fontWeight: 800, fontSize: 30, lineHeight: 1.05 }}>{countdown}</div>
+                    <div style={{ fontWeight: 800, fontSize: 28, lineHeight: 1.05 }}>{countdown}</div>
                     <div className="small muted" style={{ marginTop: 2 }}>{closed ? 'Applications closed' : phase === 'ending' ? 'Closing soon' : 'Open for applications'}</div>
                     <div className="small muted">Closes {formatDate(drive.applicationDeadline)}</div>
                   </div>
@@ -357,33 +377,33 @@ export default function StudentDriveDetailPage() {
                 {myApplication ? (
                   <ApplicationTracker application={myApplication} onView={() => navigate('/student/applications')} />
                 ) : closed ? (
-                  <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '6px 0' }}>Applications for this drive are now closed.</div>
+                  <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>Applications for this drive are now closed.</div>
                 ) : applyBlocked ? (
                   <div style={{ textAlign: 'center' }}>
-                    <Lock size={28} color="var(--text-muted)" style={{ marginBottom: 6 }} />
-                    <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>{blocked ? 'You can’t apply right now' : 'You don’t meet the criteria'}</div>
-                    <div className="small muted" style={{ marginBottom: 10 }}>{blocked ? 'TNP policy is blocking this application — see the eligibility engine.' : 'You missed one or more eligibility rules for this drive.'}</div>
-                    <button onClick={() => eligRes.refetch()} className="btn-ghost" style={{ width: '100%', padding: '10px 14px', fontWeight: 800, fontSize: 13 }}>Re-check Eligibility</button>
+                    <Lock size={28} color="var(--text-muted)" style={{ marginBottom: 8 }} />
+                    <div style={{ fontWeight: 800, fontSize: 14, marginBottom: 4 }}>{blocked ? "You can't apply right now" : "You don't meet the criteria"}</div>
+                    <div className="small muted" style={{ marginBottom: 10 }}>{blocked ? 'TNP policy is blocking this application.' : 'You missed one or more eligibility rules.'}</div>
+                    <button onClick={() => eligRes.refetch()} className="btn btn-secondary" style={{ width: '100%' }}>Re-check Eligibility</button>
                   </div>
                 ) : (
-                <button
-                  className="btn-shimmer"
-                  disabled={submitting}
-                  onClick={() => setModalOpen(true)}
-                  style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', border: 'none', cursor: 'pointer', padding: '16px 22px', borderRadius: 12, fontWeight: 800, fontSize: 16, color: '#fff', background: 'linear-gradient(90deg,#6366F1,#8B5CF6)' }}
-                >
-                    {submitting ? <Loader2 size={17} className="spinner" /> : <PartyPopper size={17} />} Apply Now
+                  <button
+                    disabled={submitting || checkingElig}
+                    onClick={handleApply}
+                    className="btn btn-primary"
+                    style={{ width: '100%', padding: '14px 22px', fontWeight: 800, fontSize: 16, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+                  >
+                    {checkingElig ? <Loader2 size={17} className="spinner" /> : <PartyPopper size={17} />} {checkingElig ? 'Checking Eligibility…' : 'Apply Now'}
                   </button>
                 )}
               </div>
             </div>
           </GlassPanel>
-
         </div>
 
-        <div className="dd-scroll" style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingRight: 0 }}>
-          <GlassPanel gradient="linear-gradient(90deg,#6366F1,#8B5CF6)" style={{ ...cardStyle, padding: 14 }}>
-            <SectionHeader title="Eligibility Engine" icon={Sparkles} subtitle="Evaluated against your live profile" />
+        {/* Right column — eligibility engine */}
+        <div className="dd-scroll" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <GlassPanel style={{ ...cardStyle, padding: 14 }}>
+            <SectionHeader title="Eligibility Engine" icon={Sparkles} subtitle="Evaluated against your live profile" tone="primary" />
             {eligRes.loading ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: 12, justifyContent: 'center' }}>
                 <Loader2 size={18} className="spinner" /> <span className="small muted">Evaluating…</span>
@@ -394,9 +414,9 @@ export default function StudentDriveDetailPage() {
               <div style={{ textAlign: 'center' }}>
                 <p className="small muted" style={{ marginBottom: 12 }}>Run a live check against your CGPA, branch, backlogs and active offers.</p>
                 <button
-                  className="btn-shimmer"
                   onClick={() => eligRes.refetch()}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: 'none', cursor: 'pointer', padding: '12px 20px', borderRadius: 12, fontWeight: 800, fontSize: 14, color: '#fff', background: 'linear-gradient(90deg,#6366F1,#8B5CF6)', width: '100%', justifyContent: 'center' }}
+                  className="btn btn-primary"
+                  style={{ width: '100%', padding: '12px 20px', fontWeight: 800, fontSize: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
                 >
                   <Sparkles size={16} /> Evaluate My Eligibility
                 </button>

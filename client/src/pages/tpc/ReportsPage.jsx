@@ -23,7 +23,7 @@ import { getChartTheme } from '../../utils/chartTheme';
 import { BRANCHES } from '../../constants';
 import { toneOf, KpiGrid } from '../../components/dashboard/primitives';
 
-const PIE_COLORS = ['#6366F1', '#4338CA', '#1E1B4B', '#A5B4FC', '#818CF8', '#4F46E5', '#6D74F0'];
+const PIE_COLORS = ['#0EA5E9', '#38BDF8', '#0284C7', '#7DD3FC', '#BAE6FD', '#0369A1', '#93C5FD'];
 const FONT = "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
 
 function AnimatedNumber({ value, format = (v) => Math.round(v).toLocaleString('en-IN'), duration = 1000 }) {
@@ -31,7 +31,7 @@ function AnimatedNumber({ value, format = (v) => Math.round(v).toLocaleString('e
   return <>{format(v)}</>;
 }
 
-function Ring({ value, size = 120, stroke = 12, color = 'var(--primary)', track = 'rgba(255,255,255,0.25)', textColor = '#fff', big = false }) {
+function Ring({ value, size = 120, stroke = 12, color = 'var(--primary)', track = 'var(--border)', textColor = 'var(--text)', big = false }) {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const off = c * (1 - Math.min(100, Math.max(0, value)) / 100);
@@ -51,7 +51,7 @@ function Ring({ value, size = 120, stroke = 12, color = 'var(--primary)', track 
   );
 }
 
-function Sparkline({ data, color = '#6366F1' }) {
+function Sparkline({ data, color = '#0EA5E9' }) {
   if (!data || data.length === 0) return <div style={{ height: 36 }} />;
   const min = Math.min(...data);
   const max = Math.max(...data);
@@ -69,7 +69,7 @@ function Sparkline({ data, color = '#6366F1' }) {
     <svg width={w} height={h} style={{ overflow: 'visible' }}>
       <defs>
         <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.35" />
+          <stop offset="0%" stopColor={color} stopOpacity="0.20" />
           <stop offset="100%" stopColor={color} stopOpacity="0" />
         </linearGradient>
       </defs>
@@ -82,42 +82,45 @@ function Sparkline({ data, color = '#6366F1' }) {
 function Kpi({ label, value, format, icon: Icon, tone, spark, ring }) {
   const resolved = toneOf(tone);
   return (
-    <div style={{ position: 'relative', overflow: 'hidden', background: 'var(--surface, #fff)', border: '1px solid var(--border, #e2e8f0)', borderRadius: 16, padding: 16, boxShadow: '0 12px 30px -22px rgba(0,0,0,0.45)' }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg, ${resolved}, transparent)` }} />
+    <div style={{ position: 'relative', overflow: 'hidden', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 16, boxShadow: 'var(--shadow-sm)' }}>
+      {/* 3px left-border accent — flat, no gradient */}
+      <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 3, background: resolved, borderRadius: 'var(--radius) 0 0 var(--radius)' }} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: 12, color: 'var(--text-sub, #64748b)', fontWeight: 600 }}>{label}</span>
-        <span style={{ display: 'inline-flex', padding: 7, borderRadius: 10, color: resolved, background: `color-mix(in srgb, ${resolved} 15%, transparent)` }}>
+        <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600 }}>{label}</span>
+        <span style={{ display: 'inline-flex', padding: 7, borderRadius: 10, color: resolved, background: `color-mix(in srgb, ${resolved} 12%, var(--surface))`, border: `1px solid color-mix(in srgb, ${resolved} 18%, var(--border))` }}>
           <Icon size={16} />
         </span>
       </div>
-      <div style={{ fontSize: 26, fontWeight: 800, margin: '10px 0 4px', color: 'var(--text, #0f172a)', fontFamily: FONT }}>
+      <div style={{ fontSize: 26, fontWeight: 800, margin: '10px 0 4px', color: 'var(--text)', fontFamily: FONT }}>
         <AnimatedNumber value={value} format={format} />
       </div>
       <div style={{ height: 38, display: 'flex', alignItems: 'center' }}>
         {ring != null
-          ? <Ring value={ring} size={38} stroke={5} color={resolved} track="var(--border, #e2e8f0)" textColor="var(--text, #0f172a)" />
+          ? <Ring value={ring} size={38} stroke={5} color={resolved} />
           : <Sparkline data={spark} color={resolved} />}
       </div>
     </div>
   );
 }
 
+/* Sky-blue funnel bars — no violet */
+const FUNNEL_COLORS = ['#BAE6FD', '#7DD3FC', '#38BDF8', '#0EA5E9'];
+
 function Funnel({ stages }) {
   const max = Math.max(...stages.map((s) => s.value), 1);
-  const colors = ['#A5B4FC', '#818CF8', '#6366F1', '#4338CA'];
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 10 }}>
       {stages.map((s, i) => {
         const w = Math.max(10, (s.value / max) * 100);
         return (
           <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ width: 120, fontSize: 12, color: 'var(--text-sub, #64748b)', textAlign: 'right' }}>{s.label}</div>
-            <div style={{ flex: 1, background: 'var(--surface-2, #f1f5f9)', borderRadius: 10, overflow: 'hidden', height: 34 }}>
+            <div style={{ width: 120, fontSize: 12, color: 'var(--text-muted)', textAlign: 'right' }}>{s.label}</div>
+            <div style={{ flex: 1, background: 'var(--surface-2)', borderRadius: 10, overflow: 'hidden', height: 34 }}>
               <div
                 style={{
                   width: `${w}%`, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
-                  paddingRight: 12, color: '#fff', fontWeight: 700, fontSize: 13,
-                  background: `linear-gradient(90deg, ${colors[i % colors.length]}, ${colors[(i + 1) % colors.length]})`,
+                  paddingRight: 12, color: i >= 2 ? '#fff' : '#0369A1', fontWeight: 700, fontSize: 13,
+                  background: FUNNEL_COLORS[i % FUNNEL_COLORS.length],
                   transition: 'width 1s ease', borderRadius: 10, fontFamily: FONT,
                 }}
               >
@@ -236,26 +239,33 @@ export default function ReportsPage() {
     <div style={{ fontFamily: FONT }}>
       <Confetti trigger={confetti} />
 
-      <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 20, padding: '26px 28px', color: '#fff', background: 'linear-gradient(120deg, #4338ca, #6366f1 45%, #818cf8)', boxShadow: '0 24px 55px -28px rgba(79,70,229,0.75)' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 18% 18%, rgba(255,255,255,0.28), transparent 42%), radial-gradient(circle at 82% 0%, rgba(255,255,255,0.18), transparent 38%)' }} />
+      {/* Hero — flat sky-blue, consistent with other pages */}
+      <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 16, padding: '24px 28px', color: '#fff', background: 'var(--primary)' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.10) 1px, transparent 1px)', backgroundSize: '22px 22px', pointerEvents: 'none' }} />
         <div style={{ position: 'relative', display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ minWidth: 280 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: 0.9 }}>
-              <Sparkles size={18} />
-              <span style={{ letterSpacing: 1, fontSize: 12, textTransform: 'uppercase', fontWeight: 700 }}>Training &amp; Placement Cell</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: 0.88 }}>
+              <Sparkles size={16} />
+              <span style={{ letterSpacing: 1, fontSize: 11.5, textTransform: 'uppercase', fontWeight: 700 }}>Training &amp; Placement Cell</span>
             </div>
-            <h1 style={{ margin: '8px 0 4px', fontSize: 30, fontWeight: 800, fontFamily: FONT }}>NIRF-Oriented Reporting</h1>
-            <p style={{ margin: 0, maxWidth: 560, opacity: 0.92, fontSize: 14, lineHeight: 1.5 }}>
+            <h1 style={{ margin: '6px 0 4px', fontSize: 28, fontWeight: 800, fontFamily: FONT }}>NIRF-Oriented Reporting</h1>
+            <p style={{ margin: 0, maxWidth: 560, opacity: 0.9, fontSize: 13.5, lineHeight: 1.5 }}>
               Aggregated live from auditable placement records via MongoDB pipelines. Structured for NIRF-style reporting — not an official NIRF submission unless verified against the current specification.
             </p>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 18 }}>
-              <Button icon={Download} variant="secondary" loading={exporting} onClick={doExport}>Export CSV</Button>
-              <Button icon={GraduationCap} variant="primary" loading={exportingGO} onClick={doExportNIRFGO}>Export NIRF GO</Button>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 16 }}>
+              {/* Buttons on blue hero — white ghost style */}
+              <button onClick={doExport} disabled={exporting} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '9px 16px', borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: 'pointer', background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', transition: 'background .15s' }}>
+                <Download size={15} /> {exporting ? 'Exporting…' : 'Export CSV'}
+              </button>
+              <button onClick={doExportNIRFGO} disabled={exportingGO} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '9px 16px', borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: 'pointer', background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', transition: 'background .15s' }}>
+                <GraduationCap size={15} /> {exportingGO ? 'Exporting…' : 'Export NIRF GO'}
+              </button>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
-            <Ring value={readiness} size={132} stroke={13} color="#fff" track="rgba(255,255,255,0.25)" textColor="#fff" big />
-            <div style={{ maxWidth: 180 }}>
+            {/* Ring on blue — white stroke on blue, track is semi-transparent white */}
+            <Ring value={readiness} size={128} stroke={12} color="#fff" track="rgba(255,255,255,0.25)" textColor="#fff" big />
+            <div style={{ maxWidth: 170 }}>
               <div style={{ fontSize: 13, opacity: 0.9, fontWeight: 700 }}>NIRF Readiness</div>
               <div style={{ fontSize: 13, opacity: 0.85, marginTop: 4, lineHeight: 1.45 }}>Tag student career outcomes to raise this score toward a submission-ready report.</div>
             </div>

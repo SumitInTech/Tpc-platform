@@ -25,7 +25,8 @@ import { getChartTheme } from '../../utils/chartTheme';
 import { Hero, Kpi, KpiGrid, GlassPanel, SectionHeader, Ring, cardStyle } from '../../components/dashboard/primitives';
 
 const FONT = "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
-const PIE_COLORS = ['#6366F1', '#4338CA', '#1E1B4B', '#A5B4FC', '#818CF8', '#4F46E5'];
+/* Sky-blue palette — no violet/indigo */
+const PIE_COLORS = ['#0EA5E9', '#38BDF8', '#0284C7', '#7DD3FC', '#BAE6FD', '#0369A1'];
 
 const PIPELINE = [
   { icon: Settings, label: 'Configure' },
@@ -150,7 +151,8 @@ export default function TPCDashboard() {
     <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
       {livePill}
       <div style={{ display: 'flex', gap: 8 }}>
-        <span style={{ display: 'grid', placeItems: 'center', width: 38, height: 38, borderRadius: 12, background: 'var(--primary)', color: '#fff', boxShadow: '0 14px 28px -14px #6366F1' }}><Radio size={18} /></span>
+        {/* Flat icon chip — no glow shadow */}
+        <span style={{ display: 'grid', placeItems: 'center', width: 36, height: 36, borderRadius: 10, background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)' }}><Radio size={17} /></span>
       </div>
     </div>
   );
@@ -172,20 +174,29 @@ export default function TPCDashboard() {
         }
       />
 
-      <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" className="mb-3 mt-3" style={{ ...cardStyle }}>
+      {/* Pipeline stepper — flat card, no gradient top stripe */}
+      <GlassPanel style={{ ...cardStyle, marginBottom: 16, marginTop: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, overflowX: 'auto' }}>
           {PIPELINE.map((s, i) => {
             const last = i === PIPELINE.length - 1;
             return (
               <Fragment key={s.label}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, minWidth: 70 }}>
-                  <span style={{ display: 'grid', placeItems: 'center', width: 42, height: 42, borderRadius: 13, color: '#fff', background: last ? 'var(--success)' : 'var(--primary)', boxShadow: last ? '0 14px 28px -14px #10B981' : '0 14px 28px -16px #6366F1', animation: last ? 'live-pulse 1.8s infinite' : 'none' }}>
-                    <s.icon size={18} />
+                  {/* Flat icon chip — primary-soft bg, primary color. Last step gets success. No glow. */}
+                  <span style={{
+                    display: 'grid', placeItems: 'center',
+                    width: 40, height: 40, borderRadius: 10,
+                    color: last ? 'var(--success-text)' : 'var(--primary-dark)',
+                    background: last ? 'var(--success-soft)' : 'var(--primary-soft)',
+                    border: `1px solid ${last ? 'color-mix(in srgb, var(--success) 30%, var(--border))' : 'color-mix(in srgb, var(--primary) 20%, var(--border))'}`,
+                    animation: last ? 'step-pulse 1.8s infinite' : 'none',
+                  }}>
+                    <s.icon size={17} />
                   </span>
-                  <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--text-sub, #64748b)', whiteSpace: 'nowrap' }}>{s.label}</span>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{s.label}</span>
                 </div>
                 {i < PIPELINE.length - 1 && (
-                  <span style={{ position: 'relative', flex: 1, minWidth: 24, height: 3, borderRadius: 999, background: 'var(--border, #e2e8f0)', overflow: 'hidden' }}>
+                  <span style={{ position: 'relative', flex: 1, minWidth: 20, height: 2, borderRadius: 999, background: 'var(--border)', overflow: 'hidden' }}>
                     <span style={{ position: 'absolute', top: 0, bottom: 0, width: '40%', borderRadius: 999, background: 'var(--primary)', animation: 'journey-flow 2.6s linear infinite' }} />
                   </span>
                 )}
@@ -199,7 +210,7 @@ export default function TPCDashboard() {
         <div style={{ ...cardStyle }}><ErrorState message={overview.error.message} onRetry={() => overview.refetch()} /></div>
       ) : (
         <>
-          <GlassPanel gradient="linear-gradient(90deg, #16A34A, #15803D)" className="mb-3" style={{ ...cardStyle }}>
+      <GlassPanel className="mb-3" style={{ ...cardStyle }}>
             <SectionHeader icon={TrendingUp} title="Placement Health" subtitle="Overall placement rate with headline compensation metrics" tone="success" />
             <PlacementGauge value={o.placementRate ?? 0} loading={overview.loading} sub={overview.loading ? '' : insight} avg={o.averagePackage} median={o.medianPackage} highest={o.highestPackage} />
           </GlassPanel>
@@ -231,17 +242,12 @@ export default function TPCDashboard() {
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={(branchWise.data?.data || []).map((b) => ({ name: b._id, placements: b.count }))}>
-                  <defs>
-                    <linearGradient id="branchGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#6366F1" />
-                      <stop offset="100%" stopColor="#4338CA" />
-                    </linearGradient>
-                  </defs>
+                  {/* No gradient — flat sky-blue bars */}
                   <CartesianGrid strokeDasharray="3 3" stroke={grid} vertical={false} />
                   <XAxis dataKey="name" tick={axis} axisLine={false} tickLine={false} />
                   <YAxis tick={axis} axisLine={false} tickLine={false} allowDecimals={false} />
                   <Tooltip contentStyle={tooltipStyle} labelStyle={chart.tooltipLabelStyle} itemStyle={chart.tooltipItemStyle} cursor={{ fill: 'color-mix(in srgb, var(--primary) 8%, transparent)' }} />
-                  <Bar dataKey="placements" fill="url(#branchGrad)" radius={[6, 6, 0, 0]} maxBarSize={44} animationDuration={900} className="chart-bar" onClick={() => navigate('/tpc/students')} />
+                  <Bar dataKey="placements" fill="#0EA5E9" radius={[6, 6, 0, 0]} maxBarSize={44} animationDuration={900} className="chart-bar" onClick={() => navigate('/tpc/students')} />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -297,17 +303,12 @@ export default function TPCDashboard() {
             <div style={{ flex: '1 1 220px', height: 240 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={(companyWise.data?.data || []).slice(0, 6).map((c) => ({ name: c._id, value: c.placements }))} layout="vertical">
-                  <defs>
-                    <linearGradient id="compGrad" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#6366F1" />
-                      <stop offset="100%" stopColor="#4338CA" />
-                    </linearGradient>
-                  </defs>
+                  {/* Flat sky-blue bars */}
                   <CartesianGrid strokeDasharray="3 3" stroke={grid} horizontal={false} />
                   <XAxis type="number" tick={axis} axisLine={false} tickLine={false} allowDecimals={false} />
                   <YAxis type="category" dataKey="name" tick={{ ...axis, fontSize: 10.5 }} width={86} axisLine={false} tickLine={false} />
                   <Tooltip contentStyle={tooltipStyle} labelStyle={chart.tooltipLabelStyle} itemStyle={chart.tooltipItemStyle} cursor={{ fill: 'color-mix(in srgb, var(--primary) 8%, transparent)' }} />
-                  <Bar dataKey="value" name="Placements" fill="url(#compGrad)" radius={[0, 6, 6, 0]} maxBarSize={18} animationDuration={900} className="chart-bar" onClick={() => navigate('/tpc/companies')} />
+                  <Bar dataKey="value" name="Placements" fill="#0EA5E9" radius={[0, 6, 6, 0]} maxBarSize={18} animationDuration={900} className="chart-bar" onClick={() => navigate('/tpc/companies')} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -322,7 +323,7 @@ export default function TPCDashboard() {
           </div>
         </GlassPanel>
 
-        <GlassPanel gradient="linear-gradient(90deg, #6366F1, #4338CA)" style={{ ...cardStyle }}>
+        <GlassPanel style={{ ...cardStyle }}>
           <div className="flex-between">
             <div>
               <div className="card-title">{isAdmin ? 'Recent Activity' : 'Latest Applications'}</div>
